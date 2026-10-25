@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
