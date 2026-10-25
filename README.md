@@ -30,11 +30,11 @@ Powered by live data from Sarajevo public transport telemetry (`navsa.spatias.co
    - Brza promjena teme pritiskom na ikonu Sunce/Mjesec.
    - Mapa i korisnički interfejs se prilagođavaju u realnom vremenu (tamne canvas i svijetle canvas karte bez vodenih žigova).
 
-5. **Interaktivna Donja Ladica (Bottom Sheet & Filteri)**
-   - Pregled svih vozila u blizini.
-   - Filteri: Sva vozila, Samo dolazeća, Tramvaji, Trolejbusi, Autobusi.
-   - Pretraga po broju linije (npr. `107`, `3`, `31E`) ili odredištu (npr. `Jezero`, `Dobrinja`, `Ilidža`).
-   - Detaljan modal za svako vozilo: registracija / garažni broj, operater (GRAS / Centrotrans), procijenjena brzina, smjer i dugme "Prikaži na mapi".
+5. **Donji Panel i Filteri (Bottom Sheet & Filteri)**
+   - Pregled svih vozila u blizini (pregled linija, polazaka i dolazaka).
+   - Filteri: Sva vozila, Dolazeća, Favoriti, Tramvaji, Trolejbusi, Autobusi.
+   - Pretraga po broju linije (npr. `107`, `3`, `31E`) ili stanici (npr. `Jezero`, `Dobrinja`, `Ilidža`).
+   - Detaljan prikaz za svako vozilo: garažni broj, operater (GRAS / Centrotrans), brzina, smjer i dugme "Prikaži na mapi".
 
 ---
 

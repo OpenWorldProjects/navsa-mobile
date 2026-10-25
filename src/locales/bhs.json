@@ -56,7 +56,7 @@
     "noFavorites": "Nema sačuvanih favorita",
     "noFavoritesHint": "Dodirnite zvjezdicu ⭐ pored bilo kojeg vozila ili linije da ih pratite ovdje.",
     "filterHint": "Pokušajte odabrati drugi filter ili resetovati pretragu.",
-    "dismiss": "Zatvori ladicu",
+    "dismiss": "Zatvori prikaz",
     "line": "Linija {{id}}",
     "savedStations": "Sačuvane stanice",
     "departuresAndVehicles": "Polasci i vozila",
