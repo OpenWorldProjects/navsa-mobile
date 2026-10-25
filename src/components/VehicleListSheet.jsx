@@ -336,17 +336,17 @@ export default function VehicleListSheet({
           ==================================================================== */}
       {isExpanded && (
         <div className="apple-dock-expanded-body">
-          {/* Saved Favorite Stations Row */}
-          <div className="apple-stations-block">
-            <div className="apple-block-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Star size={13} color="#eab308" fill="#eab308" />
-                <span>{t('sheet.savedStations')}</span>
+          {/* Saved Favorite Stations Row (Only if user has favorited stations) */}
+          {favorites && favorites.stations && favorites.stations.length > 0 && (
+            <div className="apple-stations-block">
+              <div className="apple-block-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Star size={13} color="#eab308" fill="#eab308" />
+                  <span>{t('sheet.savedStations')}</span>
+                </div>
               </div>
-            </div>
-            <div className="apple-stations-strip">
-              {favorites && favorites.stations.length > 0 ? (
-                favorites.stations.map((st) => (
+              <div className="apple-stations-strip">
+                {favorites.stations.map((st) => (
                   <div
                     key={st}
                     className="apple-station-pill"
@@ -369,20 +369,20 @@ export default function VehicleListSheet({
                       </button>
                     )}
                   </div>
-                ))
-              ) : null}
-              {onOpenLocationModal && (
-                <button
-                  type="button"
-                  className="apple-add-station-pill"
-                  onClick={onOpenLocationModal}
-                >
-                  <Plus size={12} />
-                  <span>{t('sheet.addStation')}</span>
-                </button>
-              )}
+                ))}
+                {onOpenLocationModal && (
+                  <button
+                    type="button"
+                    className="apple-add-station-pill"
+                    onClick={onOpenLocationModal}
+                  >
+                    <Plus size={12} />
+                    <span>{t('sheet.addStation')}</span>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Section Header */}
           <div className="apple-block-header departures-header">

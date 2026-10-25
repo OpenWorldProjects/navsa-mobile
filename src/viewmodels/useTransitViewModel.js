@@ -29,7 +29,7 @@ export function useTransitViewModel() {
       const saved = localStorage.getItem('navsa_favorites');
       if (saved) return JSON.parse(saved);
     } catch (e) {}
-    return { lines: ['3'], stations: ['Marijin Dvor', 'Ilidža', 'Baščaršija'] };
+    return { lines: [], stations: [] };
   });
 
   const toggleFavoriteLine = useCallback((lineId) => {
