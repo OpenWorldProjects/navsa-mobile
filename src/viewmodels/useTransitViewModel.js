@@ -134,10 +134,17 @@ export function useTransitViewModel() {
     userLocationRef.current = userLocation;
   }, [userLocation]);
 
+  // Filter change handler: switches category and clears stale selected vehicle
+  const handleFilterChange = useCallback((filter) => {
+    setActiveFilter(filter);
+    setSelectedVehicle(null);
+    setTrackedVehicleId(null);
+  }, []);
+
   // Set & persist preferred vehicle
   const setPreferredVehicle = (vehicleType) => {
     setPreferredVehicleState(vehicleType);
-    setActiveFilter(vehicleType);
+    handleFilterChange(vehicleType);
     localStorage.setItem(API_CONFIG.STORAGE_KEYS.PREFERRED_VEHICLE, vehicleType);
   };
 
@@ -415,7 +422,7 @@ export function useTransitViewModel() {
     },
     openDetailModal,
     closeDetailModal,
-    setActiveFilter,
+    setActiveFilter: handleFilterChange,
     setPreferredVehicle,
     setSearchQuery,
     setIsSheetExpanded,

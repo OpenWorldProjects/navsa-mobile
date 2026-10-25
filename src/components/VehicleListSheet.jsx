@@ -92,8 +92,10 @@ export default function VehicleListSheet({
     }
   }, [activeFilter]);
 
-  // The vehicle to showcase in the preview card
-  const activeCardVehicle = selectedVehicle || vehicles.find(v => v.isApproaching()) || vehicles[0];
+  // The vehicle to showcase in the preview card (strictly matches current filtered category)
+  const activeCardVehicle = (selectedVehicle && vehicles.some(v => v.id === selectedVehicle.id))
+    ? selectedVehicle
+    : (vehicles.find(v => v.isApproaching()) || vehicles[0]);
 
   return (
     <div
