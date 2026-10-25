@@ -77,6 +77,10 @@ function TransitApp() {
     vm.filteredVehicles.find(v => v.isApproaching()) || 
     vm.filteredVehicles[0];
 
+  const userDisplayName = vm.userLocation.isGps
+    ? t('location.gpsActive')
+    : (vm.userLocation.name || t('location.youAreHere'));
+
   return (
     <div className="app-container">
       {/* Interactive Map (Background layer) */}
@@ -100,7 +104,7 @@ function TransitApp() {
           onRefresh={vm.loadData}
           theme={theme}
           onToggleTheme={toggleTheme}
-          userLocationName={vm.userLocation.name}
+          userLocationName={userDisplayName}
           onOpenStationPicker={() => vm.setIsLocationModalOpen(true)}
           refreshProgress={vm.refreshProgress}
           onToggleFloatingMode={() => vm.setIsFloatingMode(true)}
@@ -115,7 +119,7 @@ function TransitApp() {
           onClick={() => vm.setIsLocationModalOpen(true)}
         >
           <MapPin size={13} color="#38bdf8" />
-          <span>{t('location.currentLocation')}: {vm.userLocation.name}</span>
+          <span>{t('location.currentLocation')}: {userDisplayName}</span>
         </div>
       )}
 
@@ -135,18 +139,18 @@ function TransitApp() {
 
         <button
           className={`floating-btn ${showLines ? 'active' : ''}`}
-          title="Prikaži/sakrij linije"
+          title={t('controls.toggleLines')}
           onClick={() => setShowLines(!showLines)}
-          aria-label="Linije"
+          aria-label={t('controls.toggleLines')}
         >
           <Layers size={20} />
         </button>
 
         <button
           className={`floating-btn ${showStops ? 'active' : ''}`}
-          title="Prikaži/sakrij stanice"
+          title={t('controls.toggleStops')}
           onClick={() => setShowStops(!showStops)}
-          aria-label="Stanice"
+          aria-label={t('controls.toggleStops')}
         >
           <Eye size={20} />
         </button>
@@ -205,7 +209,7 @@ function TransitApp() {
         onClose={() => vm.setIsLocationModalOpen(false)}
         onRequestGps={vm.requestGps}
         onSelectStation={vm.setStation}
-        currentLocationName={vm.userLocation.name}
+        currentLocationName={userDisplayName}
         isGps={vm.userLocation.isGps}
         favorites={vm.favorites}
         toggleFavoriteStation={vm.toggleFavoriteStation}

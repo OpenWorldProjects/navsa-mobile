@@ -51,8 +51,8 @@ export default function InspectionCard({
               className="icon-btn"
               style={{ width: '34px', height: '34px' }}
               onClick={() => onToggleFavorite(vehicle.lineId)}
-              title="Favorit"
-              aria-label="Favorit"
+              title={t('sheet.favorite')}
+              aria-label={t('sheet.favorite')}
             >
               <Star
                 size={17}
@@ -65,8 +65,8 @@ export default function InspectionCard({
               className="icon-btn"
               style={{ width: '34px', height: '34px' }}
               onClick={onClose}
-              title="Zatvori"
-              aria-label="Zatvori"
+              title={t('directions.close')}
+              aria-label={t('directions.close')}
             >
               <X size={17} />
             </button>
@@ -85,7 +85,11 @@ export default function InspectionCard({
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span className="live-dot" style={{ width: 7, height: 7 }} />
               <span style={{ fontWeight: 800 }}>
-                {proximity.isComing ? 'Dolazi prema ' + (userLocation?.name || 'vama') : 'Odlazi od vas'}
+                {proximity.isComing
+                  ? (userLocation?.isGps || !userLocation?.name
+                      ? t('directions.ingoing')
+                      : t('directions.approachingStation', { station: userLocation.name }))
+                  : t('directions.outgoing')}
               </span>
             </div>
             <div style={{ fontWeight: 800, fontSize: '13px' }}>
@@ -101,13 +105,13 @@ export default function InspectionCard({
         <div className="inspection-actions">
           <button className="inspection-btn primary" onClick={onCenterMap}>
             <Navigation size={15} />
-            <span>Prati na mapi</span>
+            <span>{t('sheet.trackOnMap')}</span>
           </button>
 
           {onOpenDetails && (
             <button className="inspection-btn secondary" onClick={onOpenDetails}>
               <Info size={15} />
-              <span>Više detalja</span>
+              <span>{t('sheet.moreDetails')}</span>
             </button>
           )}
         </div>

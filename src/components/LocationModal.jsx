@@ -57,12 +57,12 @@ export default function LocationModal({
             </div>
             {isGps && (
               <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#22c55e', fontWeight: 700 }}>
-                <Check size={16} color="#22c55e" /> Aktivno
+                <Check size={16} color="#22c55e" /> {t('location.active')}
               </span>
             )}
           </div>
           <span className="station-desc">
-            Automatsko praćenje vaših koordinata u stvarnom vremenu
+            {t('location.gpsDesc')}
           </span>
         </div>
 
@@ -102,8 +102,8 @@ export default function LocationModal({
                         e.stopPropagation();
                         toggleFavoriteStation(st.name);
                       }}
-                      title={isFavStation ? 'Ukloni iz omiljenih' : 'Dodaj u omiljene'}
-                      aria-label="Favorit stanica"
+                      title={isFavStation ? t('location.removeFavorite', { name: st.name }) : t('location.addFavorite', { name: st.name })}
+                      aria-label={t('sheet.favorite')}
                     >
                       <Star
                         size={15}

@@ -110,7 +110,7 @@ export default function VehicleListSheet({
         onTouchEnd={handleTouchEnd}
         role="button"
         tabIndex={0}
-        aria-label="Povuci za promjenu prikaza"
+        aria-label={t('sheet.dismiss')}
       >
         <div className="apple-handle-pill" />
       </div>
@@ -141,7 +141,7 @@ export default function VehicleListSheet({
                 e.stopPropagation();
                 onSearchChange('');
               }}
-              aria-label="Očisti"
+              aria-label={t('sheet.clear')}
             >
               <X size={14} />
             </button>
@@ -153,8 +153,8 @@ export default function VehicleListSheet({
                 if (onClearSelectedVehicle) onClearSelectedVehicle();
                 else if (onSelectVehicle) onSelectVehicle(null);
               }}
-              title="Poništi odabir vozila"
-              aria-label="Poništi"
+              title={t('sheet.clearSelection')}
+              aria-label={t('sheet.clearSelection')}
             >
               <X size={14} />
             </button>
@@ -165,7 +165,7 @@ export default function VehicleListSheet({
         <button
           className="apple-dock-toggle-btn"
           onClick={() => setIsExpanded && setIsExpanded(!isExpanded)}
-          aria-label={isExpanded ? 'Spusti' : 'Proširi'}
+          aria-label={isExpanded ? t('sheet.collapse') : t('sheet.expand')}
         >
           {isExpanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
         </button>
@@ -176,7 +176,7 @@ export default function VehicleListSheet({
         <button
           className="apple-dock-filter-btn icon-only"
           onClick={() => setIsExpanded && setIsExpanded(!isExpanded)}
-          title="Filteri i postavke"
+          title={t('sheet.filters')}
         >
           <SlidersHorizontal size={13} color="var(--text-muted)" />
         </button>
@@ -228,10 +228,10 @@ export default function VehicleListSheet({
                 )}
                 <span>
                   {activeCardVehicle.lineId === 'REMIZA'
-                    ? 'Za Remizu'
+                    ? t('sheet.forDepot')
                     : activeCardVehicle.lineId === 'TRAM'
-                    ? 'Tramvaj'
-                    : `Linija ${activeCardVehicle.lineId}`}
+                    ? t('vehicles.tram')
+                    : t('sheet.line', { id: activeCardVehicle.lineId })}
                 </span>
               </div>
               <span className="featured-operator">
@@ -247,7 +247,7 @@ export default function VehicleListSheet({
                   if (onClearSelectedVehicle) onClearSelectedVehicle();
                   else if (onSelectVehicle) onSelectVehicle(null);
                 }}
-                aria-label="Zatvori"
+                aria-label={t('directions.close')}
               >
                 <X size={15} />
               </button>
@@ -310,7 +310,7 @@ export default function VehicleListSheet({
                     e.stopPropagation();
                     onOpenDetailModal(selectedVehicle);
                   }}
-                  title="Sve stanice i detalji"
+                  title={t('sheet.allStops')}
                 >
                   <Info size={15} />
                   <span>{t('sheet.route')}</span>
@@ -360,8 +360,8 @@ export default function VehicleListSheet({
                           e.stopPropagation();
                           onRemoveFavoriteStation(st);
                         }}
-                        title={`Ukloni ${st}`}
-                        aria-label={`Ukloni ${st}`}
+                        title={t('location.removeFavorite', { name: st })}
+                        aria-label={t('location.removeFavorite', { name: st })}
                       >
                         <X size={11} />
                       </button>
@@ -396,12 +396,12 @@ export default function VehicleListSheet({
                   <Star size={20} color="#f59e0b" />
                 </div>
                 <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '14px' }}>
-                  {activeFilter === 'favorites' ? 'Nema sačuvanih favorita' : t('sheet.noVehicles')}
+                  {activeFilter === 'favorites' ? t('sheet.noFavorites') : t('sheet.noVehicles')}
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)', maxWidth: '280px', textAlign: 'center', lineHeight: 1.4 }}>
                   {activeFilter === 'favorites'
-                    ? 'Dodirnite zvjezdicu ⭐ pored bilo kojeg vozila ili linije da ih pratite ovdje.'
-                    : 'Pokušajte odabrati drugi filter ili resetovati pretragu.'}
+                    ? t('sheet.noFavoritesHint')
+                    : t('sheet.filterHint')}
                 </div>
               </div>
             ) : (
@@ -460,8 +460,8 @@ export default function VehicleListSheet({
                           e.stopPropagation();
                           if (toggleFavoriteLine) toggleFavoriteLine(v.lineId);
                         }}
-                        title="Favorit"
-                        aria-label="Favorit"
+                        title={t('sheet.favorite')}
+                        aria-label={t('sheet.favorite')}
                       >
                         <Star
                           size={16}

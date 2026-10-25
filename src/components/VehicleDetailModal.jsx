@@ -109,7 +109,18 @@ export default function VehicleDetailModal({
               )}
             </div>
             <div style={{ fontSize: '12px', color: 'var(--text-primary)', opacity: 0.9 }}>
-              {vehicle.proximity.sublabel}
+              {isComing
+                ? t('directions.approachingSub', {
+                    dist: vehicle.proximity.distanceMeters > 1000
+                      ? `${(vehicle.proximity.distanceMeters / 1000).toFixed(1)} km`
+                      : `${vehicle.proximity.distanceMeters}m`,
+                    eta: vehicle.proximity.etaMinutes || 1
+                  })
+                : t('directions.outgoingSub', {
+                    dist: vehicle.proximity.distanceMeters > 1000
+                      ? `${(vehicle.proximity.distanceMeters / 1000).toFixed(1)} km`
+                      : `${vehicle.proximity.distanceMeters}m`
+                  })}
             </div>
           </div>
         )}

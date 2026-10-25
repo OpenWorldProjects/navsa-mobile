@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { X, Smartphone, Share2, PlusSquare, Train, Zap, Bus, Star, CheckCircle2, Clock } from 'lucide-react';
+import { X, Smartphone, Share2, PlusSquare, Train, Zap, Bus, CheckCircle2, Clock } from 'lucide-react';
 import { useI18n } from '../context/I18nContext';
 
 export default function HomeScreenWidgetModal({
   isOpen,
   onClose,
   approachingVehicle,
-  userLocation,
-  favoriteLine
+  userLocation
 }) {
   const { t } = useI18n();
   const [selectedWidgetSize, setSelectedWidgetSize] = useState('medium'); // 'small', 'medium', 'lockscreen'
@@ -27,6 +26,9 @@ export default function HomeScreenWidgetModal({
   };
 
   const typeColor = vehicle.getPrimaryColor ? vehicle.getPrimaryColor() : '#facc15';
+  const approachingLabel = userLocation?.isGps || !userLocation?.name
+    ? t('directions.ingoing')
+    : t('directions.approachingStation', { station: userLocation.name });
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -39,14 +41,14 @@ export default function HomeScreenWidgetModal({
             </div>
             <div>
               <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
-                Brzi Pregled na Početnom Ekranu
+                {t('widgets.title')}
               </div>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                Praćenje dolazaka uživo za iOS & Android
+                {t('widgets.subtitle')}
               </div>
             </div>
           </div>
-          <button className="icon-btn" onClick={onClose} aria-label="Zatvori">
+          <button className="icon-btn" onClick={onClose} aria-label={t('directions.close')}>
             <X size={18} />
           </button>
         </div>
@@ -57,19 +59,19 @@ export default function HomeScreenWidgetModal({
             className={`widget-tab ${selectedWidgetSize === 'small' ? 'active' : ''}`}
             onClick={() => setSelectedWidgetSize('small')}
           >
-            Kompaktni (2x2)
+            {t('widgets.compact')}
           </button>
           <button
             className={`widget-tab ${selectedWidgetSize === 'medium' ? 'active' : ''}`}
             onClick={() => setSelectedWidgetSize('medium')}
           >
-            Detaljni (4x2)
+            {t('widgets.medium')}
           </button>
           <button
             className={`widget-tab ${selectedWidgetSize === 'lockscreen' ? 'active' : ''}`}
             onClick={() => setSelectedWidgetSize('lockscreen')}
           >
-            Zaključani Ekran
+            {t('widgets.lockscreen')}
           </button>
         </div>
 
@@ -79,7 +81,7 @@ export default function HomeScreenWidgetModal({
             <div className="ios-widget-card small">
               <div className="widget-top-row">
                 <span className="widget-line-pill" style={{ background: typeColor, color: '#000000' }}>
-                  Linija {vehicle.lineId}
+                  {t('sheet.line', { id: vehicle.lineId })}
                 </span>
                 <span className="widget-pulse-dot"></span>
               </div>
@@ -90,7 +92,7 @@ export default function HomeScreenWidgetModal({
                 {vehicle.proximity?.etaMinutes || 2} <span style={{ fontSize: '13px', fontWeight: 600 }}>min</span>
               </div>
               <div className="widget-sub-small">
-                🟢 Dolazi • {vehicle.proximity?.distanceMeters || 600}m
+                🟢 {t('filters.approaching')} • {vehicle.proximity?.distanceMeters || 600}m
               </div>
             </div>
           )}
@@ -100,13 +102,13 @@ export default function HomeScreenWidgetModal({
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span className="widget-line-pill" style={{ background: typeColor, color: '#000000' }}>
-                    Linija {vehicle.lineId}
+                    {t('sheet.line', { id: vehicle.lineId })}
                   </span>
                   <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>{vehicle.operator}</span>
                 </div>
                 <div className="widget-live-tag">
                   <span className="widget-pulse-dot"></span>
-                  <span>UŽIVO</span>
+                  <span>{t('app.live').toUpperCase()}</span>
                 </div>
               </div>
 
@@ -122,7 +124,7 @@ export default function HomeScreenWidgetModal({
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#22c55e', fontWeight: 700 }}>
-                  🟢 Dolazi prema {userLocation?.name || 'vama'}
+                  🟢 {approachingLabel}
                 </span>
                 <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff' }}>
                   ~{vehicle.proximity?.etaMinutes || 2} min ({vehicle.proximity?.distanceMeters || 600}m)
@@ -142,7 +144,7 @@ export default function HomeScreenWidgetModal({
                     {vehicle.headingText}
                   </span>
                   <span style={{ fontSize: '11px', color: '#22c55e' }}>
-                    🟢 Dolazi prema vama • ~{vehicle.proximity?.etaMinutes || 2} min
+                    🟢 {approachingLabel} • ~{vehicle.proximity?.etaMinutes || 2} min
                   </span>
                 </div>
               </div>
@@ -157,20 +159,20 @@ export default function HomeScreenWidgetModal({
         {/* How to install on iOS / Android */}
         <div className="widget-install-guide">
           <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
-            📱 Kako postaviti na početni ekran:
+            {t('widgets.howToInstall')}
           </div>
 
           <div className="guide-step-item">
             <div className="guide-step-num">iOS</div>
             <div className="guide-step-text">
-              U <strong>Safariju</strong> pritisnite ikonu <strong>Podijeli</strong> (Share <Share2 size={12} style={{ display: 'inline' }} />), a zatim <strong>"Na početni ekran"</strong> (<PlusSquare size={12} style={{ display: 'inline' }} /> Dodaj na ekran).
+              {t('widgets.stepIos')}
             </div>
           </div>
 
           <div className="guide-step-item">
             <div className="guide-step-num">Android</div>
             <div className="guide-step-text">
-              U <strong>Chromeu</strong> pritisnite <strong>Meni sa 3 tačke</strong> u gornjem desnom uglu ➔ <strong>"Dodaj na početni ekran"</strong> / "Instaliraj aplikaciju".
+              {t('widgets.stepAndroid')}
             </div>
           </div>
         </div>
@@ -182,7 +184,7 @@ export default function HomeScreenWidgetModal({
           onClick={onClose}
         >
           <CheckCircle2 size={16} />
-          <span>Spremno za početni ekran</span>
+          <span>{t('widgets.ready')}</span>
         </button>
       </div>
     </div>

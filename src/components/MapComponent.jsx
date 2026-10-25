@@ -207,33 +207,7 @@ export default function MapComponent({
     const userLatLng = [userLocation.latitude, userLocation.longitude];
     const accuracyRadius = Math.max(userLocation.accuracy || 30, 20);
 
-    // Reuse existing user marker and circle smoothly without tearing down layers
-    if (userMarkerRef.current && userCircleRef.current) {
-      userMarkerRef.current.setLatLng(userLatLng);
-      userCircleRef.current.setLatLng(userLatLng);
-      userCircleRef.current.setRadius(accuracyRadius);
-      if (!userGroup.hasLayer(userMarkerRef.current)) {
-        userMarkerRef.current.addTo(userGroup);
-      }
-      if (!userGroup.hasLayer(userCircleRef.current)) {
-        userCircleRef.current.addTo(userGroup);
-      }
-      return;
-    }
-
-    userGroup.clearLayers();
-
-    // 1. Radar Accuracy Circle (Soft pulsating translucent blue)
-    const accuracyCircle = L.circle(userLatLng, {
-      radius: accuracyRadius,
-      color: '#0284c7',
-      fillColor: '#38bdf8',
-      fillOpacity: 0.16,
-      weight: 1.5,
-      dashArray: '4, 6'
-    }).addTo(userGroup);
-
-    // 2. Standard Universal Precision GPS Pinpoint Marker
+    // 1. Universal Precision GPS Pinpoint Marker Icon with dynamic translated label
     const userIcon = L.divIcon({
       className: 'user-pinpoint-marker-container',
       html: `
@@ -254,18 +228,48 @@ export default function MapComponent({
       iconAnchor: [22, 28]
     });
 
+    const popupHtml = `
+      <div class="user-map-popup">
+        <div class="user-popup-tag">📍 ${t('location.currentLocation')}</div>
+        <div class="user-popup-name">${userLocation.isGps ? t('location.gpsActive') : (userLocation.name || t('location.youAreHere'))}</div>
+        <div class="user-popup-coords">${userLocation.latitude.toFixed(5)}°N, ${userLocation.longitude.toFixed(5)}°E</div>
+      </div>
+    `;
+
+    // Reuse existing user marker and circle smoothly without tearing down layers
+    if (userMarkerRef.current && userCircleRef.current) {
+      userMarkerRef.current.setLatLng(userLatLng);
+      userMarkerRef.current.setIcon(userIcon);
+      userMarkerRef.current.setPopupContent(popupHtml);
+      userCircleRef.current.setLatLng(userLatLng);
+      userCircleRef.current.setRadius(accuracyRadius);
+      if (!userGroup.hasLayer(userMarkerRef.current)) {
+        userMarkerRef.current.addTo(userGroup);
+      }
+      if (!userGroup.hasLayer(userCircleRef.current)) {
+        userCircleRef.current.addTo(userGroup);
+      }
+      return;
+    }
+
+    userGroup.clearLayers();
+
+    // Radar Accuracy Circle (Soft pulsating translucent blue)
+    const accuracyCircle = L.circle(userLatLng, {
+      radius: accuracyRadius,
+      color: '#0284c7',
+      fillColor: '#38bdf8',
+      fillOpacity: 0.16,
+      weight: 1.5,
+      dashArray: '4, 6'
+    }).addTo(userGroup);
+
     const marker = L.marker(userLatLng, {
       icon: userIcon,
       zIndexOffset: 3000
     }).addTo(userGroup);
 
-    marker.bindPopup(`
-      <div class="user-map-popup">
-        <div class="user-popup-tag">📍 ${t('location.currentLocation')}</div>
-        <div class="user-popup-name">${userLocation.name || t('location.youAreHere')}</div>
-        <div class="user-popup-coords">${userLocation.latitude.toFixed(5)}°N, ${userLocation.longitude.toFixed(5)}°E</div>
-      </div>
-    `, {
+    marker.bindPopup(popupHtml, {
       offset: [0, -24],
       className: 'custom-map-popup',
       closeButton: false

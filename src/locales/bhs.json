@@ -21,6 +21,7 @@
     "origin": "Polazište",
     "ingoing": "Dolazi prema vama",
     "outgoing": "Odlazi od vas",
+    "approachingStation": "Dolazi prema {{station}}",
     "arrivingNow": "Stiže na vašu stanicu",
     "approachingSub": "Udaljenost {{dist}} • ~{{eta}} min",
     "outgoingSub": "Udaljenost {{dist}}",
@@ -38,9 +39,13 @@
     "enableGps": "Omogući GPS lokaciju uživo",
     "orSelectStation": "Ili izaberite stanicu u Sarajevu",
     "currentLocation": "Vaša lokacija",
-    "gpsActive": "Vaša GPS lokacija",
+    "gpsActive": "GPS Lokacija",
     "centerOnMe": "Centriraj na moju lokaciju",
-    "youAreHere": "Vi ste ovdje"
+    "youAreHere": "Vi ste ovdje",
+    "active": "Aktivno",
+    "gpsDesc": "Automatsko praćenje vaših koordinata u stvarnom vremenu",
+    "removeFavorite": "Ukloni {{name}} iz omiljenih",
+    "addFavorite": "Dodaj {{name}} u omiljene"
   },
   "sheet": {
     "nearbyTransit": "Prevoz u blizini",
@@ -48,6 +53,9 @@
     "incomingCount": "{{count}} dolazi",
     "searchPlaceholder": "Pretraži liniju ili stanicu (npr. 3, 107, Jezero...)",
     "noVehicles": "Nema vozila za odabrane filtere.",
+    "noFavorites": "Nema sačuvanih favorita",
+    "noFavoritesHint": "Dodirnite zvjezdicu ⭐ pored bilo kojeg vozila ili linije da ih pratite ovdje.",
+    "filterHint": "Pokušajte odabrati drugi filter ili resetovati pretragu.",
     "dismiss": "Zatvori ladicu",
     "line": "Linija {{id}}",
     "savedStations": "Sačuvane stanice",
@@ -61,12 +69,37 @@
     "tapToInspect": "Dodirnite za pregled",
     "addStation": "Dodaj",
     "forDepot": "Za Remizu",
-    "departing": "Odlazi"
+    "departing": "Odlazi",
+    "clear": "Očisti",
+    "clearSelection": "Poništi odabir vozila",
+    "expand": "Proširi",
+    "collapse": "Spusti",
+    "filters": "Filteri i postavke",
+    "allStops": "Sve stanice i detalji",
+    "moreDetails": "Više detalja"
   },
   "vehicles": {
     "tram": "Tramvaj",
     "trolley": "Trolejbus",
     "bus": "Autobus"
+  },
+  "controls": {
+    "toggleLines": "Prikaži/sakrij linije",
+    "toggleStops": "Prikaži/sakrij stanice",
+    "centerOnMe": "Centriraj na moju lokaciju",
+    "restore": "Povrati puni prikaz"
+  },
+  "widgets": {
+    "title": "Brzi Pregled na Početnom Ekranu",
+    "subtitle": "Praćenje dolazaka uživo za iOS & Android",
+    "compact": "Kompaktni (2x2)",
+    "medium": "Detaljni (4x2)",
+    "lockscreen": "Zaključani Ekran",
+    "howToInstall": "📱 Kako postaviti na početni ekran:",
+    "stepIos": "U Safariju pritisnite ikonu Podijeli (Share), a zatim \"Na početni ekran\" (Dodaj na ekran).",
+    "stepAndroid": "U Chromeu pritisnite meni sa 3 tačke u gornjem desnom uglu ➔ \"Dodaj na početni ekran\" / \"Instaliraj aplikaciju\".",
+    "ready": "Spremno za početni ekran",
+    "close": "Zatvori"
   },
   "settings": {
     "themeLight": "Svijetla tema",

@@ -67,7 +67,7 @@ export default function FloatingHud({
         <div className="hud-sub">
           {vehicle.proximity && (
             <span className={vehicle.proximity.isComing ? 'hud-ingoing' : 'hud-outgoing'}>
-              {vehicle.proximity.isComing ? '🟢 Dolazi' : '🔴 Odlazi'}
+              {vehicle.proximity.isComing ? `🟢 ${t('filters.approaching')}` : `🔴 ${t('sheet.departing')}`}
               {vehicle.proximity.etaMinutes ? ` • ~${vehicle.proximity.etaMinutes} min` : ''}
             </span>
           )}
@@ -79,8 +79,8 @@ export default function FloatingHud({
       <button
         className="hud-restore-btn"
         onClick={onRestore}
-        title="Povrati puni prikaz"
-        aria-label="Povrati puni prikaz"
+        title={t('controls.restore')}
+        aria-label={t('controls.restore')}
       >
         <Maximize2 size={16} />
       </button>

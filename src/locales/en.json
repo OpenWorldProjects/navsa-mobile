@@ -21,6 +21,7 @@
     "origin": "Origin",
     "ingoing": "Approaching you",
     "outgoing": "Moving away",
+    "approachingStation": "Approaching {{station}}",
     "arrivingNow": "Arriving at your stop now",
     "approachingSub": "Distance {{dist}} • ~{{eta}} min",
     "outgoingSub": "Distance {{dist}}",
@@ -38,9 +39,13 @@
     "enableGps": "Enable Live GPS Location",
     "orSelectStation": "Or select a Sarajevo station",
     "currentLocation": "Your Location",
-    "gpsActive": "Your GPS Location",
+    "gpsActive": "GPS Location",
     "centerOnMe": "Center on my location",
-    "youAreHere": "You are here"
+    "youAreHere": "You are here",
+    "active": "Active",
+    "gpsDesc": "Automatic real-time tracking of your coordinates",
+    "removeFavorite": "Remove {{name}} from favorites",
+    "addFavorite": "Add {{name}} to favorites"
   },
   "sheet": {
     "nearbyTransit": "Nearby Transit",
@@ -48,6 +53,9 @@
     "incomingCount": "{{count}} coming",
     "searchPlaceholder": "Search by line or stop (e.g. 3, 107, Jezero...)",
     "noVehicles": "No vehicles matching selected filters.",
+    "noFavorites": "No saved favorites",
+    "noFavoritesHint": "Tap the star ⭐ next to any vehicle or line to track it here.",
+    "filterHint": "Try selecting another filter or clearing search.",
     "dismiss": "Dismiss sheet",
     "line": "Line {{id}}",
     "savedStations": "Saved Stops",
@@ -61,12 +69,37 @@
     "tapToInspect": "Tap to inspect",
     "addStation": "Add",
     "forDepot": "To Depot",
-    "departing": "Departing"
+    "departing": "Departing",
+    "clear": "Clear",
+    "clearSelection": "Clear vehicle selection",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "filters": "Filters & settings",
+    "allStops": "All stops and details",
+    "moreDetails": "More details"
   },
   "vehicles": {
     "tram": "Tram",
     "trolley": "Trolleybus",
     "bus": "Bus"
+  },
+  "controls": {
+    "toggleLines": "Show/hide lines",
+    "toggleStops": "Show/hide stops",
+    "centerOnMe": "Center on my location",
+    "restore": "Restore full view"
+  },
+  "widgets": {
+    "title": "Home Screen Live Glance",
+    "subtitle": "Real-time arrival tracking for iOS & Android",
+    "compact": "Compact (2x2)",
+    "medium": "Detailed (4x2)",
+    "lockscreen": "Lock Screen Pill",
+    "howToInstall": "📱 How to add to Home Screen:",
+    "stepIos": "In Safari, tap the Share button, then select \"Add to Home Screen\".",
+    "stepAndroid": "In Chrome, tap the 3-dots menu in the top right corner ➔ \"Add to Home screen\" / \"Install app\".",
+    "ready": "Ready for Home Screen",
+    "close": "Close"
   },
   "settings": {
     "themeLight": "Light Theme",

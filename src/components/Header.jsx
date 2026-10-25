@@ -75,7 +75,7 @@ export default function Header({
             className="icon-btn"
             title={t('settings.language')}
             onClick={toggleLanguage}
-            aria-label="Promijeni jezik"
+            aria-label={t('settings.language')}
             style={{ fontWeight: 800, fontSize: '11px', textTransform: 'uppercase' }}
           >
             {language === 'bhs' ? 'EN' : 'BS'}
@@ -86,7 +86,7 @@ export default function Header({
             className="icon-btn header-loc-btn"
             title={t('location.title')}
             onClick={onOpenStationPicker}
-            aria-label="Izaberi stanicu"
+            aria-label={t('location.title')}
           >
             <MapPin size={17} color="#38bdf8" />
           </button>
@@ -96,7 +96,7 @@ export default function Header({
             className={`icon-btn ${isRefreshing ? 'spinning' : ''}`}
             onClick={onRefresh}
             title={t('settings.refresh')}
-            aria-label="Osvježi"
+            aria-label={t('settings.refresh')}
           >
             <RefreshCw size={17} />
           </button>
@@ -106,7 +106,7 @@ export default function Header({
             className="icon-btn"
             onClick={onToggleTheme}
             title={t('settings.toggleTheme')}
-            aria-label="Prebaci temu"
+            aria-label={t('settings.toggleTheme')}
           >
             {theme === 'dark' ? <Sun size={18} color="#facc15" /> : <Moon size={18} color="#6366f1" />}
           </button>
