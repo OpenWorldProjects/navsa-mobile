@@ -109,5 +109,12 @@
     "language": "Language",
     "quickGlance": "Home Screen Live Card",
     "floatingMode": "Floating HUD Mode"
+  },
+  "quota": {
+    "pausedTitle": "Live Tracking Paused",
+    "pausedDesc": "No interaction detected for 3 minutes. Live tracking has been paused to save mobile data and battery.",
+    "resume": "Resume Live Tracking",
+    "dailyLimitReached": "Daily Tracking Quota Reached",
+    "dailyLimitDesc": "To preserve demo server resources, the maximum daily refreshes have been reached. Please check back tomorrow."
   }
 }

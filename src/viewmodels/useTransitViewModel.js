@@ -241,8 +241,59 @@ export function useTransitViewModel() {
     } catch (e) {}
   }, [requestGps]);
 
+  // Inactivity & Daily Quota Guard (Protects bandwidth and prevents spam)
+  const [isPausedDueToInactivity, setIsPausedDueToInactivity] = useState(false);
+  const [isDailyQuotaReached, setIsDailyQuotaReached] = useState(false);
+  const lastActivityTimestampRef = useRef(Date.now());
+
+  // Track user interactions to reset inactivity timer
+  useEffect(() => {
+    const handleUserActivity = () => {
+      lastActivityTimestampRef.current = Date.now();
+      if (isPausedDueToInactivity) {
+        setIsPausedDueToInactivity(false);
+      }
+    };
+
+    window.addEventListener('touchstart', handleUserActivity, { passive: true });
+    window.addEventListener('click', handleUserActivity, { passive: true });
+    window.addEventListener('keydown', handleUserActivity, { passive: true });
+    window.addEventListener('mousemove', handleUserActivity, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleUserActivity);
+      window.removeEventListener('click', handleUserActivity);
+      window.removeEventListener('keydown', handleUserActivity);
+      window.removeEventListener('mousemove', handleUserActivity);
+    };
+  }, [isPausedDueToInactivity]);
+
+  // Daily quota helper: max 1000 requests per IP/browser/day (~85 minutes of continuous 5s tracking)
+  const checkAndUpdateDailyQuota = useCallback(() => {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const stored = localStorage.getItem('navsa_daily_quota');
+      let data = stored ? JSON.parse(stored) : { date: today, count: 0 };
+      if (data.date !== today) {
+        data = { date: today, count: 0 };
+      }
+      if (data.count >= 1000) {
+        setIsDailyQuotaReached(true);
+        return false;
+      }
+      data.count += 1;
+      localStorage.setItem('navsa_daily_quota', JSON.stringify(data));
+      return true;
+    } catch {
+      return true;
+    }
+  }, []);
+
   // Fetch live vehicle telemetry
   const loadData = useCallback(async () => {
+    if (document.visibilityState === 'hidden') return;
+    if (!checkAndUpdateDailyQuota()) return;
+
     setIsRefreshing(true);
     try {
       const data = await transitService.fetchLiveVehicles(userLocationRef.current);
@@ -271,14 +322,31 @@ export function useTransitViewModel() {
       setIsRefreshing(false);
       setRefreshProgress(0);
     }
-  }, [trackedVehicleId]);
+  }, [trackedVehicleId, checkAndUpdateDailyQuota]);
 
-  // Auto-refresh timer loop
+  // Auto-refresh timer loop with inactivity guard (3 minutes = 180,000ms)
   useEffect(() => {
     loadData();
 
     let step = 0;
     const interval = setInterval(() => {
+      // 1. Pause if tab is in background (hidden)
+      if (document.visibilityState === 'hidden') {
+        return;
+      }
+
+      // 2. Pause if user has been inactive for > 3 minutes (180 seconds)
+      const inactiveMs = Date.now() - lastActivityTimestampRef.current;
+      if (inactiveMs > 180000) {
+        setIsPausedDueToInactivity(true);
+        return;
+      }
+
+      // 3. Pause if daily quota is reached
+      if (isDailyQuotaReached) {
+        return;
+      }
+
       step += 1;
       const progress = Math.min(100, (step / (API_CONFIG.REFRESH_INTERVAL_SECONDS * 10)) * 100);
       setRefreshProgress(progress);
@@ -290,7 +358,7 @@ export function useTransitViewModel() {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [loadData]);
+  }, [loadData, isDailyQuotaReached]);
 
   // Select vehicle and focus map
   const selectVehicle = (vehicle) => {
@@ -409,10 +477,16 @@ export function useTransitViewModel() {
     isFavoriteStation,
     trackedVehicleId,
     toggleTrackVehicle,
-    isFloatingMode,
-    setIsFloatingMode,
     isWidgetModalOpen,
     setIsWidgetModalOpen,
+    // Bandwidth Guard & Quota
+    isPausedDueToInactivity,
+    isDailyQuotaReached,
+    resumeTracking: () => {
+      lastActivityTimestampRef.current = Date.now();
+      setIsPausedDueToInactivity(false);
+      loadData(false);
+    },
     // Actions
     loadData,
     selectVehicle,

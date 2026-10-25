@@ -112,8 +112,43 @@ function TransitApp() {
         />
       )}
 
+      {/* Bandwidth & Inactivity Guard Notice */}
+      {vm.isPausedDueToInactivity && (
+        <div
+          className="user-status-pill"
+          style={{
+            top: '76px',
+            background: 'rgba(234, 88, 12, 0.9)',
+            color: '#fff',
+            cursor: 'pointer',
+            border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 4px 14px rgba(234,88,12,0.4)',
+            zIndex: 1000
+          }}
+          onClick={vm.resumeTracking}
+        >
+          <span>⏸️ {t('quota.pausedTitle')} &bull; <strong>{t('quota.resume')}</strong></span>
+        </div>
+      )}
+
+      {vm.isDailyQuotaReached && (
+        <div
+          className="user-status-pill"
+          style={{
+            top: '76px',
+            background: 'rgba(220, 38, 38, 0.9)',
+            color: '#fff',
+            border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 4px 14px rgba(220,38,38,0.4)',
+            zIndex: 1000
+          }}
+        >
+          <span>🛑 {t('quota.dailyLimitReached')}</span>
+        </div>
+      )}
+
       {/* User Location Status Pill (Hidden in Floating Mode) */}
-      {!vm.isFloatingMode && (
+      {!vm.isFloatingMode && !vm.isPausedDueToInactivity && !vm.isDailyQuotaReached && (
         <div
           className="user-status-pill"
           onClick={() => vm.setIsLocationModalOpen(true)}

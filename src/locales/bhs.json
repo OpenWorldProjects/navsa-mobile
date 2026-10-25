@@ -109,5 +109,12 @@
     "language": "Jezik",
     "quickGlance": "Brzi pregled na početnom ekranu",
     "floatingMode": "Lebdeći mini-prikaz"
+  },
+  "quota": {
+    "pausedTitle": "Praćenje privremeno pauzirano",
+    "pausedDesc": "Nema aktivnosti korisnika duže od 3 minute. Praćenje je pauzirano radi uštede vašeg interneta i baterije.",
+    "resume": "Nastavi praćenje uživo",
+    "dailyLimitReached": "Dnevni limit praćenja dostignut",
+    "dailyLimitDesc": "Radi zaštite demo servera, dostigli ste maksimalni broj osvežavanja za danas. Pokušajte ponovo sutra."
   }
 }
