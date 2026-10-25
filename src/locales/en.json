@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "Sarajevo Transit",
+    "tagline": "Real-time Public Transport Tracking",
+    "live": "Live",
+    "activeVehicles": "{{count}} active vehicles in Sarajevo"
+  },
+  "filters": {
+    "all": "All",
+    "approaching": "Coming",
+    "favorites": "Favorites",
+    "tram": "Tram",
+    "trolley": "Trolleybus",
+    "bus": "Bus",
+    "preferredVehicle": "Default Vehicle",
+    "setDefault": "Set as default"
+  },
+  "directions": {
+    "headingAndDestination": "Heading & Destination",
+    "destination": "Destination",
+    "origin": "Origin",
+    "ingoing": "Approaching you",
+    "outgoing": "Moving away",
+    "arrivingNow": "Arriving at your stop now",
+    "approachingSub": "Distance {{dist}} • ~{{eta}} min",
+    "outgoingSub": "Distance {{dist}}",
+    "speed": "Speed",
+    "compassBearing": "Compass Bearing",
+    "operator": "Operator",
+    "garageNumber": "Vehicle Code",
+    "etaMinutes": "~{{min}} min",
+    "showOnMap": "Show on Map",
+    "close": "Close"
+  },
+  "location": {
+    "title": "Your Location",
+    "desc": "Location permission enables accurate approaching vs departing detection (Ingoing/Outgoing) with real-time ETA estimates.",
+    "enableGps": "Enable Live GPS Location",
+    "orSelectStation": "Or select a Sarajevo station",
+    "currentLocation": "Your Location",
+    "gpsActive": "Your GPS Location",
+    "centerOnMe": "Center on my location",
+    "youAreHere": "You are here"
+  },
+  "sheet": {
+    "nearbyTransit": "Nearby Transit",
+    "available": "{{count}} available",
+    "incomingCount": "{{count}} coming",
+    "searchPlaceholder": "Search by line or stop (e.g. 3, 107, Jezero...)",
+    "noVehicles": "No vehicles matching selected filters.",
+    "dismiss": "Dismiss sheet",
+    "line": "Line {{id}}",
+    "savedStations": "Saved Stops",
+    "departuresAndVehicles": "Departures & Vehicles",
+    "trackOnMap": "Follow on Map",
+    "trackingActive": "Tracking Active",
+    "stopTracking": "Stop Tracking",
+    "favorite": "Favorite",
+    "save": "Save",
+    "route": "Route",
+    "tapToInspect": "Tap to inspect",
+    "addStation": "Add",
+    "forDepot": "To Depot",
+    "departing": "Departing"
+  },
+  "vehicles": {
+    "tram": "Tram",
+    "trolley": "Trolleybus",
+    "bus": "Bus"
+  },
+  "settings": {
+    "themeLight": "Light Theme",
+    "themeDark": "Dark Theme",
+    "toggleTheme": "Toggle Theme",
+    "refresh": "Refresh Data",
+    "language": "Language",
+    "quickGlance": "Home Screen Live Card",
+    "floatingMode": "Floating HUD Mode"
+  }
+}

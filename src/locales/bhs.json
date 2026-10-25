@@ -1,0 +1,80 @@
+{
+  "app": {
+    "name": "Sarajevo Transit",
+    "tagline": "Uživo praćenje javnog prevoza",
+    "live": "Uživo",
+    "activeVehicles": "{{count}} vozila u prometu KS"
+  },
+  "filters": {
+    "all": "Sva",
+    "approaching": "Dolaze",
+    "favorites": "Favoriti",
+    "tram": "Tramvaj",
+    "trolley": "Trolejbus",
+    "bus": "Autobus",
+    "preferredVehicle": "Zadano vozilo",
+    "setDefault": "Postavi kao zadano"
+  },
+  "directions": {
+    "headingAndDestination": "Smjer kretanja i odredište",
+    "destination": "Odredište",
+    "origin": "Polazište",
+    "ingoing": "Dolazi prema vama",
+    "outgoing": "Odlazi od vas",
+    "arrivingNow": "Stiže na vašu stanicu",
+    "approachingSub": "Udaljenost {{dist}} • ~{{eta}} min",
+    "outgoingSub": "Udaljenost {{dist}}",
+    "speed": "Brzina",
+    "compassBearing": "Smjer kompasa",
+    "operator": "Operater",
+    "garageNumber": "Garažni broj",
+    "etaMinutes": "~{{min}} min",
+    "showOnMap": "Prikaži na mapi",
+    "close": "Zatvori"
+  },
+  "location": {
+    "title": "Vaša lokacija",
+    "desc": "Dozvola za GPS lokaciju omogućava prikaz vozila koja dolaze u vašem smjeru (Ingoing/Outgoing) sa tačnim vremenom dolaska.",
+    "enableGps": "Omogući GPS lokaciju uživo",
+    "orSelectStation": "Ili izaberite stanicu u Sarajevu",
+    "currentLocation": "Vaša lokacija",
+    "gpsActive": "Vaša GPS lokacija",
+    "centerOnMe": "Centriraj na moju lokaciju",
+    "youAreHere": "Vi ste ovdje"
+  },
+  "sheet": {
+    "nearbyTransit": "Prevoz u blizini",
+    "available": "{{count}} dostupno",
+    "incomingCount": "{{count}} dolazi",
+    "searchPlaceholder": "Pretraži liniju ili stanicu (npr. 3, 107, Jezero...)",
+    "noVehicles": "Nema vozila za odabrane filtere.",
+    "dismiss": "Zatvori ladicu",
+    "line": "Linija {{id}}",
+    "savedStations": "Sačuvane stanice",
+    "departuresAndVehicles": "Polasci i vozila",
+    "trackOnMap": "Prati na mapi",
+    "trackingActive": "Praćenje aktivno",
+    "stopTracking": "Zaustavi praćenje",
+    "favorite": "Favorit",
+    "save": "Sačuvaj",
+    "route": "Trasa",
+    "tapToInspect": "Dodirnite za pregled",
+    "addStation": "Dodaj",
+    "forDepot": "Za Remizu",
+    "departing": "Odlazi"
+  },
+  "vehicles": {
+    "tram": "Tramvaj",
+    "trolley": "Trolejbus",
+    "bus": "Autobus"
+  },
+  "settings": {
+    "themeLight": "Svijetla tema",
+    "themeDark": "Tamna tema",
+    "toggleTheme": "Promijeni temu",
+    "refresh": "Osvježi podatke",
+    "language": "Jezik",
+    "quickGlance": "Brzi pregled na početnom ekranu",
+    "floatingMode": "Lebdeći mini-prikaz"
+  }
+}

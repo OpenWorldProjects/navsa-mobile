@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-ssr
+*.local
+*.log
+
+# Temp device screenshots and recordings
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.webp
+
+# Editor and OS
+.DS_Store
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
