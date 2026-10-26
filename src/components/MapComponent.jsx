@@ -46,7 +46,7 @@ export default function MapComponent({
       ],
       maxBoundsViscosity: 0.4,
       minZoom: 10,
-      maxZoom: 18
+      maxZoom: 19
     });
 
     map.attributionControl.setPrefix(false);
@@ -89,7 +89,7 @@ export default function MapComponent({
     };
   }, []);
 
-  // Update Tile Layer based on Dark/Light theme (Watermark-free Esri Canvas)
+  // Update Tile Layer based on Dark/Light theme (High-res CARTO Dark Matter & Positron, up to zoom 20 without missing tiles)
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -104,7 +104,8 @@ export default function MapComponent({
         : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 
     const newTileLayer = L.tileLayer(tileUrl, {
-      maxZoom: 18,
+      maxZoom: 19,
+      maxNativeZoom: 16,
       attribution: 'Tiles &copy; Esri'
     }).addTo(map);
 

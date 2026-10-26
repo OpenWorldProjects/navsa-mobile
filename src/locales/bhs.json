@@ -90,16 +90,16 @@
     "restore": "Povrati puni prikaz"
   },
   "widgets": {
-    "title": "Brzi Pregled na Početnom Ekranu",
-    "subtitle": "Praćenje dolazaka uživo za iOS & Android",
+    "title": "Widget za Početni Ekran",
+    "subtitle": "Nativno praćenje dolazaka za Android & iOS",
     "compact": "Kompaktni (2x2)",
     "medium": "Detaljni (4x2)",
     "lockscreen": "Zaključani Ekran",
-    "howToInstall": "📱 Kako postaviti na početni ekran:",
-    "stepIos": "U Safariju pritisnite ikonu Podijeli (Share), a zatim \"Na početni ekran\" (Dodaj na ekran).",
-    "stepAndroid": "U Chromeu pritisnite meni sa 3 tačke u gornjem desnom uglu ➔ \"Dodaj na početni ekran\" / \"Instaliraj aplikaciju\".",
-    "ready": "Spremno za početni ekran",
-    "close": "Zatvori"
+    "howToInstall": "📱 Kako postaviti widget na početni ekran:",
+    "stepIosNative": "Dugo pritisnite na početni ekran ➔ Dodirnite \"+\" u gornjem uglu ➔ Pronađite \"Sarajevo Transit\" widget.",
+    "stepAndroidNative": "Dugo pritisnite prazan prostor na početnom ekranu ➔ Odaberite \"Widgeti\" ➔ Pronađite \"Sarajevo Transit\" i prevucite na ekran.",
+    "addToHomeScreen": "Dodaj widget na početni ekran",
+    "ready": "U redu"
   },
   "settings": {
     "themeLight": "Svijetla tema",

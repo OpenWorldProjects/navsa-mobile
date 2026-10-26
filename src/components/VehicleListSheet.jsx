@@ -92,10 +92,14 @@ export default function VehicleListSheet({
     }
   }, [activeFilter]);
 
-  // The vehicle to showcase in the preview card (strictly matches current filtered category)
+  // The vehicle to showcase in the preview card (strictly matches current filtered category):
+  // 1. If user selected a specific vehicle, show that
+  // 2. Else prioritize any vehicle whose line is in favorites
+  // 3. Else any approaching vehicle
+  // 4. Else first available vehicle in category
   const activeCardVehicle = (selectedVehicle && vehicles.some(v => v.id === selectedVehicle.id))
     ? selectedVehicle
-    : (vehicles.find(v => v.isApproaching()) || vehicles[0]);
+    : (vehicles.find(v => favorites?.lines?.some(l => String(l) === String(v.lineId))) || vehicles.find(v => v.isApproaching()) || vehicles[0]);
 
   return (
     <div
@@ -241,26 +245,46 @@ export default function VehicleListSheet({
               </span>
             </div>
 
-            {selectedVehicle ? (
-              <button
-                className="featured-close-circle"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (onClearSelectedVehicle) onClearSelectedVehicle();
-                  else if (onSelectVehicle) onSelectVehicle(null);
-                }}
-                aria-label={t('directions.close')}
-              >
-                <X size={15} />
-              </button>
-            ) : (
-              activeCardVehicle.proximity?.isApproaching && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {activeCardVehicle.proximity?.isApproaching && (
                 <span className="featured-eta-badge">
                   <span className="live-dot" style={{ width: '6px', height: '6px' }} />
                   ~{activeCardVehicle.proximity.etaMinutes || 2} min
                 </span>
-              )
-            )}
+              )}
+
+              {/* Instant Favorite / Star button right on the collapsed card */}
+              <button
+                type="button"
+                className="apple-featured-star-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (toggleFavoriteLine) toggleFavoriteLine(activeCardVehicle.lineId);
+                }}
+                title={t('sheet.favorite')}
+                aria-label={t('sheet.favorite')}
+              >
+                <Star
+                  size={16}
+                  fill={favorites && favorites.lines.some(l => String(l) === String(activeCardVehicle.lineId)) ? '#eab308' : 'none'}
+                  color={favorites && favorites.lines.some(l => String(l) === String(activeCardVehicle.lineId)) ? '#eab308' : 'var(--text-muted)'}
+                />
+              </button>
+
+              {selectedVehicle && (
+                <button
+                  className="featured-close-circle"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onClearSelectedVehicle) onClearSelectedVehicle();
+                    else if (onSelectVehicle) onSelectVehicle(null);
+                  }}
+                  aria-label={t('directions.close')}
+                >
+                  <X size={15} />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="featured-route-title">

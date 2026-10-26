@@ -10,6 +10,7 @@ import { useTransitViewModel } from './viewmodels/useTransitViewModel';
 import { I18nProvider, useI18n } from './context/I18nContext';
 import { API_CONFIG } from './config/api.config';
 import { Locate, Layers, MapPin, Eye } from 'lucide-react';
+import { syncWidgetData } from './services/widgetBridge';
 
 function TransitApp() {
   const { t } = useI18n();
@@ -76,6 +77,13 @@ function TransitApp() {
     vm.selectedVehicle || 
     vm.filteredVehicles.find(v => v.isApproaching()) || 
     vm.filteredVehicles[0];
+
+  // Sync live approaching vehicle and station to native Android home screen widget
+  useEffect(() => {
+    if (closestApproachingVehicle) {
+      syncWidgetData(closestApproachingVehicle, vm.userLocation);
+    }
+  }, [closestApproachingVehicle, vm.userLocation]);
 
   const userDisplayName = vm.userLocation.isGps
     ? t('location.gpsActive')

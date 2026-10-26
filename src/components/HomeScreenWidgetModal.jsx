@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Smartphone, Share2, PlusSquare, Train, Zap, Bus, CheckCircle2, Clock } from 'lucide-react';
 import { useI18n } from '../context/I18nContext';
+import { pinHomeScreenWidget } from '../services/widgetBridge';
 
 export default function HomeScreenWidgetModal({
   isOpen,
@@ -156,36 +157,54 @@ export default function HomeScreenWidgetModal({
           )}
         </div>
 
-        {/* How to install on iOS / Android */}
+        {/* How to install on Android / iOS */}
         <div className="widget-install-guide">
           <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
             {t('widgets.howToInstall')}
           </div>
 
           <div className="guide-step-item">
-            <div className="guide-step-num">iOS</div>
+            <div className="guide-step-num">Android</div>
             <div className="guide-step-text">
-              {t('widgets.stepIos')}
+              {t('widgets.stepAndroidNative')}
             </div>
           </div>
 
           <div className="guide-step-item">
-            <div className="guide-step-num">Android</div>
+            <div className="guide-step-num">iOS</div>
             <div className="guide-step-text">
-              {t('widgets.stepAndroid')}
+              {t('widgets.stepIosNative')}
             </div>
           </div>
         </div>
 
-        {/* Action Button */}
-        <button
-          className="btn btn-primary"
-          style={{ width: '100%', justifyContent: 'center', marginTop: '14px' }}
-          onClick={onClose}
-        >
-          <CheckCircle2 size={16} />
-          <span>{t('widgets.ready')}</span>
-        </button>
+        {/* Action Button: Native Pin Prompt + Close */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '14px' }}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            style={{ width: '100%', justifyContent: 'center' }}
+            onClick={async () => {
+              const res = await pinHomeScreenWidget();
+              if (res && res.supported) {
+                onClose();
+              }
+            }}
+          >
+            <PlusSquare size={16} />
+            <span>{t('widgets.addToHomeScreen')}</span>
+          </button>
+
+          <button
+            type="button"
+            className="btn"
+            style={{ width: '100%', justifyContent: 'center', background: 'var(--bg-glass-card)' }}
+            onClick={onClose}
+          >
+            <CheckCircle2 size={16} />
+            <span>{t('widgets.ready')}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

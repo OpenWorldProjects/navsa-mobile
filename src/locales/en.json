@@ -90,16 +90,16 @@
     "restore": "Restore full view"
   },
   "widgets": {
-    "title": "Home Screen Live Glance",
-    "subtitle": "Real-time arrival tracking for iOS & Android",
+    "title": "Home Screen Widget",
+    "subtitle": "Native arrival tracking for Android & iOS",
     "compact": "Compact (2x2)",
     "medium": "Detailed (4x2)",
     "lockscreen": "Lock Screen Pill",
-    "howToInstall": "📱 How to add to Home Screen:",
-    "stepIos": "In Safari, tap the Share button, then select \"Add to Home Screen\".",
-    "stepAndroid": "In Chrome, tap the 3-dots menu in the top right corner ➔ \"Add to Home screen\" / \"Install app\".",
-    "ready": "Ready for Home Screen",
-    "close": "Close"
+    "howToInstall": "📱 How to add widget to Home Screen:",
+    "stepIosNative": "Touch and hold the Home Screen ➔ Tap \"+\" in the top corner ➔ Search for \"Sarajevo Transit\" widget.",
+    "stepAndroidNative": "Touch and hold an empty space on your Home Screen ➔ Tap \"Widgets\" ➔ Select \"Sarajevo Transit\" and drag it to your screen.",
+    "addToHomeScreen": "Add Widget to Home Screen",
+    "ready": "Got it"
   },
   "settings": {
     "themeLight": "Light Theme",

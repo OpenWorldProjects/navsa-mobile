@@ -4,4 +4,6 @@
     <string name="title_activity_main">Sarajevo Transit</string>
     <string name="package_name">ba.spatias.navsa</string>
     <string name="custom_url_scheme">ba.spatias.navsa</string>
+    <string name="widget_medium_desc">Detaljni prikaz dolazaka vozila uživo</string>
+    <string name="widget_compact_desc">Brzi prikaz najskorijeg dolaska</string>
 </resources>

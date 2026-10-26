@@ -2369,6 +2369,25 @@ body, html {
   background: var(--dock-item-hover);
 }
 
+.apple-featured-star-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--dock-circle-bg);
+  border: 1px solid var(--dock-circle-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.apple-featured-star-btn:hover {
+  background: var(--dock-item-hover);
+  transform: scale(1.08);
+}
+
 .featured-eta-badge {
   color: #22c55e;
   font-weight: 700;

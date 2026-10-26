@@ -33,6 +33,20 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
+
+        <!-- Native Android Home Screen Widget Provider -->
+        <receiver
+            android:name=".widget.TransitWidgetProvider"
+            android:label="Sarajevo Transit"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="ba.spatias.navsa.WIDGET_REFRESH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/transit_widget_medium_info" />
+        </receiver>
     </application>
 
     <!-- Permissions -->
