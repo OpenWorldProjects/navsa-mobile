@@ -35,12 +35,18 @@ jobs:
       - name: Build web application
         run: npm run build
 
+      - name: Copy Web Assets to Android
+        run: npx cap copy android
+
       - name: Setup Android SDK Environment
         run: |
-          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
-
-      - name: Sync Capacitor Android
-        run: npx cap sync android
+          ANDROID_PATH="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ -d "$ANDROID_PATH" ]; then
+            echo "sdk.dir=$ANDROID_PATH" > android/local.properties
+          fi
+          if [ -f android/local.properties ]; then
+            cat android/local.properties
+          fi
 
       - name: Build Android Release APK
         run: |
