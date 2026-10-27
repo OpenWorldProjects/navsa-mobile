@@ -637,13 +637,10 @@ body, html {
 }
 
 .vehicle-marker-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   position: relative;
   width: 48px;
   height: 54px;
+  transform-origin: 24px 40px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -656,6 +653,10 @@ body, html {
 
 /* Badge stays horizontal on top, clean and readable */
 .vehicle-marker-badge {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 11px;
   font-weight: 800;
   padding: 2px 7px;
@@ -665,12 +666,14 @@ body, html {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
   letter-spacing: -0.2px;
   z-index: 3;
-  margin-bottom: 2px;
   white-space: nowrap;
 }
 
 /* Direction arrow rotates underneath the badge, no overlap */
 .vehicle-arrow-box {
+  position: absolute;
+  top: 26px;
+  left: 10px;
   width: 28px;
   height: 28px;
   display: flex;
@@ -683,7 +686,7 @@ body, html {
 
 .approach-pulse-ring {
   position: absolute;
-  top: 50%;
+  top: 40px;
   left: 50%;
   width: 44px;
   height: 44px;
@@ -1335,11 +1338,18 @@ body, html {
   -webkit-backdrop-filter: blur(20px);
   border: 1.5px solid rgba(56, 189, 248, 0.4);
   border-radius: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
   cursor: grab;
   touch-action: none;
   user-select: none;
+  isolation: isolate;
   animation: hud-slide-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme="light"] .floating-transit-hud {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1.5px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
 }
 
 @keyframes hud-slide-in {
@@ -1375,9 +1385,17 @@ body, html {
   text-overflow: ellipsis;
 }
 
+[data-theme="light"] .floating-transit-hud .hud-dest {
+  color: #0f172a;
+}
+
 .hud-sub {
   font-size: 11px;
   color: #94a3b8;
+}
+
+[data-theme="light"] .floating-transit-hud .hud-sub {
+  color: #475569;
 }
 
 .hud-ingoing {
@@ -1401,6 +1419,17 @@ body, html {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme="light"] .floating-transit-hud .hud-restore-btn {
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+[data-theme="light"] .floating-transit-hud .hud-restore-btn:hover {
+  background: rgba(15, 23, 42, 0.12);
 }
 
 /* ========================================================
@@ -2145,8 +2174,8 @@ body, html {
 
 .apple-floating-dock.dock-collapsed {
   height: auto;
-  max-height: 250px;
-  padding-bottom: 6px;
+  max-height: 420px;
+  padding-bottom: 8px;
 }
 
 .apple-floating-dock.dock-expanded {
@@ -2310,9 +2339,55 @@ body, html {
   box-shadow: 0 3px 10px rgba(37, 99, 235, 0.4);
 }
 
+.apple-filter-chip.chip-tram.active,
+[data-theme="light"] .apple-filter-chip.chip-tram.active {
+  background: #facc15 !important;
+  border-color: #eab308 !important;
+  color: #0f172a !important;
+  box-shadow: 0 3px 10px rgba(250, 204, 21, 0.45) !important;
+}
+
+.apple-filter-chip.chip-tram.active span,
+[data-theme="light"] .apple-filter-chip.chip-tram.active span {
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+.apple-filter-chip.chip-trolley.active,
+[data-theme="light"] .apple-filter-chip.chip-trolley.active {
+  background: #fb923c !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(251, 146, 60, 0.45) !important;
+}
+
+.apple-filter-chip.chip-bus.active,
+[data-theme="light"] .apple-filter-chip.chip-bus.active {
+  background: #0284c7 !important;
+  border-color: #0369a1 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.45) !important;
+}
+
+.apple-filter-chip.chip-approaching.active,
+[data-theme="light"] .apple-filter-chip.chip-approaching.active {
+  background: #22c55e !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(34, 197, 94, 0.45) !important;
+}
+
+.apple-filter-chip.chip-favorites.active,
+[data-theme="light"] .apple-filter-chip.chip-favorites.active {
+  background: #f59e0b !important;
+  border-color: #d97706 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.45) !important;
+}
+
 /* 4. Featured Card (Option B Preview in collapsed mode) */
 .apple-featured-card {
-  margin: 3px 14px 8px;
+  margin: 4px 14px 10px;
   padding: 10px 14px;
   border-radius: 18px;
   background: var(--dock-card-bg);
@@ -2321,6 +2396,7 @@ body, html {
   flex-direction: column;
   gap: 5px;
   cursor: pointer;
+  flex-shrink: 0;
   transition: all 0.2s ease;
 }
 
@@ -2550,6 +2626,65 @@ body, html {
 .station-pill-remove:hover {
   background: rgba(239, 68, 68, 0.35);
   color: #ef4444;
+}
+
+/* Matching Station Pills during Search */
+.apple-search-stations-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  margin: 4px 0 8px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+  border-top: 1px solid var(--dock-item-border, rgba(0, 0, 0, 0.08));
+}
+
+.apple-search-stations-row::-webkit-scrollbar {
+  display: none;
+}
+
+.search-stations-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0284c7;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.search-stations-pills-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+
+.search-stations-pills-list::-webkit-scrollbar {
+  display: none;
+}
+
+.apple-station-pill.matching-pill {
+  padding: 4px 10px;
+  font-size: 12px;
+  background: rgba(2, 132, 199, 0.12);
+  border: 1px solid rgba(2, 132, 199, 0.35);
+  color: var(--text-primary);
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+.apple-station-pill.matching-pill:hover {
+  background: rgba(2, 132, 199, 0.25);
+  border-color: #0284c7;
+  transform: translateY(-1px);
 }
 
 .apple-add-station-pill {
@@ -2899,3 +3034,24 @@ body, html {
 
 
 
+
+.theme-auto-icon {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+}
+.theme-mode-btn.active {
+  color: var(--accent-blue);
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--accent-blue);
+}
+@media (max-width: 400px) {
+  .header-actions { gap: 3px; }
+  .header-actions .icon-btn { width: 28px; height: 30px; }
+}
+.widget-modal-content .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}

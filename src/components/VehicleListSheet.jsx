@@ -34,6 +34,7 @@ export default function VehicleListSheet({
   onSetPreferredVehicle,
   searchQuery = '',
   onSearchChange,
+  matchingStations = [],
   approachingCount = 0,
   favorites = { lines: [], stations: [] },
   toggleFavoriteLine,
@@ -177,8 +178,16 @@ export default function VehicleListSheet({
         </button>
       </div>
 
-      {/* 3. Apple Filter Chips Row */}
-      <div className="apple-dock-filters" ref={filtersScrollRef}>
+      {/* 3. Apple Filter Chips Row (Desktop mouse wheel scrollable) */}
+      <div
+        className="apple-dock-filters"
+        ref={filtersScrollRef}
+        onWheel={(e) => {
+          if (filtersScrollRef.current) {
+            filtersScrollRef.current.scrollLeft += e.deltaY;
+          }
+        }}
+      >
         <button
           className="apple-dock-filter-btn icon-only"
           onClick={() => setIsExpanded && setIsExpanded(!isExpanded)}
@@ -190,18 +199,60 @@ export default function VehicleListSheet({
         {filterTabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeFilter === tab.id;
+          const isTram = tab.id === 'tram';
           return (
             <button
               key={tab.id}
-              className={`apple-filter-chip ${isActive ? 'active' : ''}`}
+              className={`apple-filter-chip chip-${tab.id} ${isActive ? 'active' : ''}`}
               onClick={() => onFilterChange(tab.id)}
+              style={
+                isActive
+                  ? isTram
+                    ? { background: '#facc15', borderColor: '#eab308', color: '#000000', boxShadow: '0 3px 10px rgba(250, 204, 21, 0.4)' }
+                    : tab.id === 'trolley'
+                    ? { background: '#fb923c', borderColor: '#f97316', color: '#ffffff', boxShadow: '0 3px 10px rgba(251, 146, 60, 0.4)' }
+                    : tab.id === 'bus'
+                    ? { background: '#0284c7', borderColor: '#0369a1', color: '#ffffff', boxShadow: '0 3px 10px rgba(2, 132, 199, 0.4)' }
+                    : tab.id === 'approaching'
+                    ? { background: '#22c55e', borderColor: '#16a34a', color: '#ffffff', boxShadow: '0 3px 10px rgba(34, 197, 94, 0.4)' }
+                    : tab.id === 'favorites'
+                    ? { background: '#f59e0b', borderColor: '#d97706', color: '#ffffff', boxShadow: '0 3px 10px rgba(245, 158, 11, 0.4)' }
+                    : undefined
+                  : undefined
+              }
             >
-              <Icon size={13} color={isActive ? '#ffffff' : tab.color} />
-              <span>{tab.label}</span>
+              <Icon size={13} color={isActive ? (isTram ? '#000000' : '#ffffff') : tab.color} />
+              <span style={isActive && isTram ? { color: '#000000', fontWeight: 700 } : undefined}>{tab.label}</span>
             </button>
           );
         })}
       </div>
+
+      {/* 3b. Matching Station Pills (Shown when user searches e.g. "cengic vila" or "jezero") */}
+      {searchQuery.trim().length > 0 && matchingStations && matchingStations.length > 0 && (
+        <div className="apple-search-stations-row">
+          <div className="search-stations-label">
+            <MapPin size={12} color="#0284c7" />
+            <span>{t('sheet.stations') || 'Stanice'}:</span>
+          </div>
+          <div className="search-stations-pills-list">
+            {matchingStations.map((st) => (
+              <button
+                key={st.id || st.name}
+                type="button"
+                className="apple-station-pill matching-pill"
+                onClick={() => {
+                  if (onSelectStation) onSelectStation(st);
+                  if (setIsExpanded) setIsExpanded(true);
+                }}
+              >
+                <MapPin size={11} color="#0284c7" />
+                <span className="station-pill-name">{st.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ====================================================================
           4. INFORMATIVE FEATURED CARD (Option B style, Apple Maps place card)
@@ -249,7 +300,7 @@ export default function VehicleListSheet({
               {activeCardVehicle.proximity?.isApproaching && (
                 <span className="featured-eta-badge">
                   <span className="live-dot" style={{ width: '6px', height: '6px' }} />
-                  ~{activeCardVehicle.proximity.etaMinutes || 2} min
+                  {activeCardVehicle.proximity.etaMinutes <= 1 ? 'Stiže' : `${activeCardVehicle.proximity.etaMinutes || 2} min`}
                 </span>
               )}
 
@@ -473,9 +524,9 @@ export default function VehicleListSheet({
                           className={`apple-row-eta ${isComing ? 'ingoing' : 'outgoing'}`}
                         >
                           {isComing ? (
-                            <>~{v.proximity.etaMinutes || 2} min</>
+                            <>{v.proximity.etaMinutes <= 1 ? (!t('sheet.arrivingNow') || t('sheet.arrivingNow').includes('sheet.') ? 'Stiže' : t('sheet.arrivingNow')) : `${v.proximity.etaMinutes} min`}</>
                           ) : (
-                            <>{t('sheet.departing')}</>
+                            <>{!t('sheet.departing') || t('sheet.departing').includes('sheet.') ? 'Odlazi' : t('sheet.departing')}</>
                           )}
                         </span>
                       )}

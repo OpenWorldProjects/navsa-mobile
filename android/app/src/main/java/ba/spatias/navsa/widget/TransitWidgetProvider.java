@@ -66,6 +66,9 @@ public class TransitWidgetProvider extends AppWidgetProvider {
         String statusText = prefs.getString("status_text", "🟢 Dolazi prema vama");
         String updated = prefs.getString("updated", new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()));
 
+        String stationName = prefs.getString("station_name", "📍 Prema vašoj stanici");
+        int progress = prefs.getInt("progress", 70);
+
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         boolean isCompact = minWidth > 0 && minWidth < 180;
@@ -85,9 +88,11 @@ public class TransitWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_line_badge, isCompact ? lineId : "Linija " + lineId);
         views.setTextViewText(R.id.widget_destination, destination);
         views.setTextViewText(R.id.widget_eta, etaText);
+        views.setProgressBar(R.id.widget_progress, 100, Math.max(10, Math.min(100, progress)), false);
 
         if (!isCompact) {
             views.setTextViewText(R.id.widget_operator, operator);
+            views.setTextViewText(R.id.widget_station, stationName);
             views.setTextViewText(R.id.widget_updated, updated);
 
             // Refresh button PendingIntent

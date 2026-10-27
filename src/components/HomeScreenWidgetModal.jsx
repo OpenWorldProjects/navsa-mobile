@@ -128,7 +128,7 @@ export default function HomeScreenWidgetModal({
                   🟢 {approachingLabel}
                 </span>
                 <span style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff' }}>
-                  ~{vehicle.proximity?.etaMinutes || 2} min ({vehicle.proximity?.distanceMeters || 600}m)
+                  {vehicle.proximity?.etaMinutes || 2} min ({vehicle.proximity?.distanceMeters || 600}m)
                 </span>
               </div>
             </div>
@@ -197,7 +197,7 @@ export default function HomeScreenWidgetModal({
 
           <button
             type="button"
-            className="btn"
+            className="btn-secondary"
             style={{ width: '100%', justifyContent: 'center', background: 'var(--bg-glass-card)' }}
             onClick={onClose}
           >

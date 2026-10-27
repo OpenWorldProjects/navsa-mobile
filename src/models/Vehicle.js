@@ -14,7 +14,9 @@ export class Vehicle {
     headingText = '',
     headingTo = '',
     operator = 'GRAS',
-    proximity = null
+    proximity = null,
+    isStale = false,
+    lastUpdated = null
   }) {
     this.id = id;
     this.vehicleCode = vehicleCode;
@@ -30,6 +32,8 @@ export class Vehicle {
     this.headingTo = headingTo;
     this.operator = operator;
     this.proximity = proximity;
+    this.isStale = isStale;
+    this.lastUpdated = lastUpdated || Date.now();
   }
 
   isTram() {

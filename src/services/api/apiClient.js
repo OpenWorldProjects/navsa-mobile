@@ -16,7 +16,14 @@ class ApiClient {
         signal: controller.signal
       });
 
-      clearTimeout(timeoutId);
+      // Upstream 204 No Content means telemetry server has no fresh updates
+      if (response.status === 204) {
+        return { isStale: true, status: 204, data: [] };
+      }
+
+      if (response.status === 503) {
+        return { isStale: true, status: 503, data: [] };
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);

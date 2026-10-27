@@ -51,6 +51,8 @@
     "nearbyTransit": "Nearby Transit",
     "available": "{{count}} available",
     "incomingCount": "{{count}} coming",
+    "arrivingNow": "Arriving",
+    "stations": "Stations",
     "searchPlaceholder": "Search by line or stop (e.g. 3, 107, Jezero...)",
     "noVehicles": "No vehicles matching selected filters.",
     "noFavorites": "No saved favorites",
@@ -102,8 +104,10 @@
     "ready": "Got it"
   },
   "settings": {
-    "themeLight": "Light Theme",
-    "themeDark": "Dark Theme",
+    "theme": "Theme",
+    "themeAuto": "Auto",
+    "themeLight": "Light",
+    "themeDark": "Dark",
     "toggleTheme": "Toggle Theme",
     "refresh": "Refresh Data",
     "language": "Language",

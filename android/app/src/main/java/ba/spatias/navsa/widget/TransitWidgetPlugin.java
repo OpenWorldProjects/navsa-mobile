@@ -33,6 +33,8 @@ public class TransitWidgetPlugin extends Plugin {
             String operator = call.getString("operator", "GRAS");
             String etaText = call.getString("etaText", "🟢 Uživo ~2 min");
             String statusText = call.getString("statusText", "🟢 Dolazi prema vama");
+            String stationName = call.getString("stationName", "📍 Vaša stanica");
+            int progress = call.getInt("progress", 70);
 
             String now = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
 
@@ -43,6 +45,8 @@ public class TransitWidgetPlugin extends Plugin {
             editor.putString("operator", operator);
             editor.putString("eta_text", etaText);
             editor.putString("status_text", statusText);
+            editor.putString("station_name", stationName);
+            editor.putInt("progress", progress);
             editor.putString("updated", now);
             editor.apply();
 

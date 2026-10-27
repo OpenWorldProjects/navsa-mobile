@@ -14,8 +14,7 @@ export const TRAM_LINES = {
   "4": { line: "4", type: 4, name: "Linija 4", from: "Ilidža", to: "Željeznička Stanica", stops: ["Ilidža", "Stup", "Nedžarići", "Alipašino Polje", "Otoka", "Čengić Vila", "Socijalno", "Pofalići", "Muzeji", "Željeznička Stanica"] },
   "5": { line: "5", type: 4, name: "Linija 5", from: "Nedžarići", to: "Baščaršija", stops: ["Nedžarići", "Alipašino Polje", "Otoka", "Čengić Vila", "Socijalno", "Pofalići", "Marijin Dvor", "Skenderija", "Baščaršija"] },
   "6": { line: "6", type: 4, name: "Linija 6", from: "Ilidža", to: "Skenderija", stops: ["Ilidža", "Stup", "Nedžarići", "Otoka", "Čengić Vila", "Pofalići", "Marijin Dvor", "Skenderija"] },
-  "7": { line: "7", type: 4, name: "Linija 7", from: "Nedžarići", to: "Skenderija", stops: ["Nedžarići", "Otoka", "Čengić Vila", "Marijin Dvor", "Skenderija"] },
-  "11": { line: "11", type: 4, name: "Linija 11", from: "Hrasnica", to: "Baščaršija", stops: ["Hrasnica", "Ilidža", "Stup", "Otoka", "Čengić Vila", "Marijin Dvor", "Baščaršija"] },
+  "7": { line: "7", type: 4, name: "Linija 7", from: "Nedžarići", to: "Skenderija", stops: ["Nedžarići", "Otoka", "Čengić Vila", "Marijin Dvor", "Skenderija"] }
 };
 
 export const TROLLEY_LINES = {
@@ -64,12 +63,11 @@ export const BUS_LINES = {
 const tramLineSets = {
   "1": new Set(["BAŠČARŠIJA", "ŽELJEZNIČKA STANICA"]),
   "2": new Set(["BAŠČARŠIJA", "ČENGIĆ VILA"]),
-  "3": new Set(["BAŠČARŠIJA", "ILIDŽA"]),
+  "3": new Set(["BAŠČARŠIJA", "ILIDŽA", "HRASNICA"]),
   "4": new Set(["ŽELJEZNIČKA STANICA", "ILIDŽA"]),
   "5": new Set(["BAŠČARŠIJA", "NEDŽARIĆI"]),
   "6": new Set(["SKENDERIJA", "ILIDŽA"]),
   "7": new Set(["SKENDERIJA", "NEDŽARIĆI"]),
-  "11": new Set(["BAŠČARŠIJA", "HRASNICA"]),
 };
 
 const trolleyLineSets = {
@@ -264,8 +262,43 @@ export function determineUserRelativeDirection(vehicle, userLocation, prevVehicl
 
   let isComing = null;
 
-  // 1. Check change in distance if previous position exists
-  if (prevVehicle) {
+  // 1. For trams on the linear Sarajevo corridor (Ilidža <-> Baščaršija):
+  // Check exact corridor progression relative to station/user location
+  if (vehicle.vehicleTypeId === 4) {
+    const destUpper = (vehicle.destination || '').toUpperCase();
+    const headingEast =
+      destUpper.includes('BAŠČARŠ') ||
+      destUpper.includes('BASCARS') ||
+      destUpper.includes('VIJEĆ') ||
+      destUpper.includes('VIJEC');
+    const headingWest =
+      destUpper.includes('ILIDŽ') ||
+      destUpper.includes('ILIDZ') ||
+      destUpper.includes('HRASN') ||
+      destUpper.includes('NEDŽ') ||
+      destUpper.includes('REMIZ') ||
+      destUpper.includes('ČENGIĆ') ||
+      destUpper.includes('CENGIC');
+
+    if (headingEast) {
+      // Eastbound: if vehicle is already east of user location by > 80m, it has PASSED the station!
+      if (vehicle.longitude > userLocation.longitude + 0.001) {
+        isComing = false;
+      } else {
+        isComing = true;
+      }
+    } else if (headingWest) {
+      // Westbound: if vehicle is already west of user location by > 80m, it has PASSED the station!
+      if (vehicle.longitude < userLocation.longitude - 0.001) {
+        isComing = false;
+      } else {
+        isComing = true;
+      }
+    }
+  }
+
+  // 2. Check change in distance if previous position exists
+  if (isComing === null && prevVehicle) {
     const prevDist = calculateDistanceMeters(
       prevVehicle.latitude,
       prevVehicle.longitude,
@@ -273,12 +306,11 @@ export function determineUserRelativeDirection(vehicle, userLocation, prevVehicl
       userLocation.longitude
     );
     const delta = prevDist - distanceMeters;
-    // If delta > 5m, it got closer
-    if (delta > 5) isComing = true;
-    else if (delta < -5) isComing = false;
+    if (delta > 6) isComing = true;
+    else if (delta < -6) isComing = false;
   }
 
-  // 2. If no prev position or delta was negligible, check vector angle between vehicle bearing and direction to user
+  // 3. Fallback to vector angle between vehicle bearing and direction to user
   if (isComing === null && vehicle.bearing !== undefined) {
     const bearingToUser = calculateBearing(
       vehicle.latitude,
@@ -286,9 +318,8 @@ export function determineUserRelativeDirection(vehicle, userLocation, prevVehicl
       userLocation.latitude,
       userLocation.longitude
     );
-    const diff = Math.abs((vehicle.bearing - bearingToUser + 180) % 360 - 180);
-    // If vehicle heading is within 80 degrees of pointing towards user, it's approaching!
-    isComing = diff < 85;
+    const diff = Math.abs(((vehicle.bearing - bearingToUser + 180) % 360) - 180);
+    isComing = diff < 80;
   }
 
   // Calculate rough ETA assuming average city speed ~ 20 km/h (5.5 m/s)
@@ -311,7 +342,7 @@ export function determineUserRelativeDirection(vehicle, userLocation, prevVehicl
     return {
       status: 'ingoing',
       label: 'Dolazi prema vama',
-      sublabel: `Udaljenost ${distanceMeters < 1000 ? distanceMeters + ' m' : (distanceMeters/1000).toFixed(1) + ' km'} • ~${etaMinutes} min`,
+      sublabel: `Udaljenost ${distanceMeters < 1000 ? distanceMeters + ' m' : (distanceMeters / 1000).toFixed(1) + ' km'} • ${etaMinutes} min`,
       badgeClass: 'badge-ingoing',
       isComing: true,
       distanceMeters,

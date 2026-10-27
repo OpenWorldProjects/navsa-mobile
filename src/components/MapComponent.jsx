@@ -81,6 +81,7 @@ export default function MapComponent({
       map.remove();
       mapInstanceRef.current = null;
       vehiclesLayerGroupRef.current = null;
+      vehicleMarkersMapRef.current.clear();
       tracksLayerGroupRef.current = null;
       stopsLayerGroupRef.current = null;
       userLayerGroupRef.current = null;
@@ -89,7 +90,7 @@ export default function MapComponent({
     };
   }, []);
 
-  // Update Tile Layer based on Dark/Light theme (High-res CARTO Dark Matter & Positron, up to zoom 20 without missing tiles)
+  // Use the same Esri basemaps as the published app for both themes.
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -124,18 +125,21 @@ export default function MapComponent({
     L.geoJSON(tramlinesData, {
       style: {
         color: '#facc15',
-        weight: 5,
-        opacity: 0.95
+        weight: 4.5,
+        opacity: 0.95,
+        lineCap: 'round',
+        lineJoin: 'round'
       }
     }).addTo(tracksGroup);
 
-    // Trolley lines: Vivid Orange dashed
+    // Trolley lines: Solid Vivid Orange continuous transit path
     L.geoJSON(trolleylinesData, {
       style: {
         color: '#fb923c',
-        weight: 4,
-        opacity: 0.95,
-        dashArray: '6, 6'
+        weight: 3.5,
+        opacity: 0.9,
+        lineCap: 'round',
+        lineJoin: 'round'
       }
     }).addTo(tracksGroup);
   }, [showLines, theme]);
@@ -162,13 +166,6 @@ export default function MapComponent({
     const createStopMarker = (feature, latlng) => {
       const marker = L.marker(latlng, { icon: stopIcon, zIndexOffset: 400 });
       const stationName = feature.properties?.name || 'Stanica';
-
-      marker.bindTooltip(stationName, {
-        permanent: false,
-        direction: 'top',
-        offset: [0, -10],
-        className: 'station-tooltip'
-      });
 
       marker.bindPopup(`
         <div class="station-map-popup">
@@ -315,7 +312,7 @@ export default function MapComponent({
       className: 'vehicle-div-icon',
       html: markerHtml,
       iconSize: [48, 54],
-      iconAnchor: [24, 27]
+      iconAnchor: [24, 40]
     });
   };
 
@@ -324,7 +321,7 @@ export default function MapComponent({
     const proximityBadge = vehicle.proximity ? `
       <div class="popup-status-badge ${vehicle.proximity.badgeClass}">
         ${vehicle.proximity.isComing ? '🟢 ' + t('directions.ingoing') : '🔴 ' + t('directions.outgoing')}
-        ${vehicle.proximity.etaMinutes ? ` • ~${vehicle.proximity.etaMinutes} min` : ''}
+        ${vehicle.proximity.etaMinutes ? ` • ${vehicle.proximity.etaMinutes} min` : ''}
       </div>
     ` : '';
 
@@ -365,6 +362,7 @@ export default function MapComponent({
       const existing = vehicleMarkersMapRef.current.get(vehicle.id);
 
       if (existing) {
+        existing.vehicle = vehicle;
         // Smoothly glide marker to new coordinates without recreating DOM node!
         existing.marker.setLatLng([vehicle.latitude, vehicle.longitude]);
         existing.marker.setZIndexOffset(isSelected ? 900 : (isApproaching ? 600 : 300));
@@ -393,11 +391,11 @@ export default function MapComponent({
 
         marker.on('click', (e) => {
           L.DomEvent.stopPropagation(e);
-          onSelectVehicle(vehicle);
+          onSelectVehicle(vehicleMarkersMapRef.current.get(vehicle.id)?.vehicle || vehicle);
         });
 
         marker.addTo(vehiclesGroup);
-        vehicleMarkersMapRef.current.set(vehicle.id, { marker, stateKey });
+        vehicleMarkersMapRef.current.set(vehicle.id, { marker, stateKey, vehicle });
       }
     });
 

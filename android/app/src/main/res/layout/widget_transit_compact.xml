@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <!-- Top Row: Line pill & Live pulse -->
+    <!-- Top Row: Line pill & Live pulse capsule -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -18,22 +18,43 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:background="@drawable/widget_line_pill_yellow"
-            android:paddingStart="6dp"
+            android:paddingStart="7dp"
             android:paddingTop="2dp"
-            android:paddingEnd="6dp"
+            android:paddingEnd="7dp"
             android:paddingBottom="2dp"
             android:text="3"
             android:textColor="#000000"
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="7dp"
-            android:layout_height="7dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_widget_live_dot"
-            android:contentDescription="Live" />
+            android:background="@drawable/widget_live_badge"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="2dp">
+
+            <ImageView
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:src="@drawable/ic_widget_live_dot"
+                android:contentDescription="Live" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:text="UŽIVO"
+                android:textColor="#22c55e"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </RelativeLayout>
 
     <!-- Destination -->
@@ -45,11 +66,11 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Baščaršija"
-        android:textColor="#f8fafc"
+        android:textColor="#ffffff"
         android:textSize="13sp"
         android:textStyle="bold" />
 
-    <!-- Big ETA -->
+    <!-- Big Bold ETA -->
     <TextView
         android:id="@+id/widget_eta"
         android:layout_width="match_parent"
@@ -58,8 +79,20 @@
         android:gravity="center_vertical"
         android:text="~2 min"
         android:textColor="#4ade80"
-        android:textSize="21sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
+
+    <!-- Visual Progress Bar -->
+    <ProgressBar
+        android:id="@+id/widget_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="4dp"
+        android:max="100"
+        android:progress="70"
+        android:progressDrawable="@drawable/widget_progress_bar" />
 
     <!-- Bottom: Sub status -->
     <TextView

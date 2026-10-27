@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { transitService } from '../services/api/transitService';
 import { API_CONFIG } from '../config/api.config';
-import { POPULAR_STATIONS, getStationCoordinates } from '../services/stations';
+import { POPULAR_STATIONS, getStationCoordinates, normalizeText, searchStations } from '../services/stations';
+import { TRAM_LINES, TROLLEY_LINES, BUS_LINES } from '../services/lines';
 
 export function useTransitViewModel() {
   const [vehicles, setVehicles] = useState([]);
@@ -418,6 +419,33 @@ export function useTransitViewModel() {
   // Filtered and sorted vehicles
   const filteredVehicles = useMemo(() => {
     return vehicles.filter(v => {
+      // 1. If search query is active, search takes precedence across lines, stations, codes, destinations
+      if (searchQuery.trim()) {
+        const q = normalizeText(searchQuery);
+        const matchesLine = v.lineId && normalizeText(v.lineId).includes(q);
+        const matchesDest = v.destination && normalizeText(v.destination).includes(q);
+        const matchesOrigin = v.origin && normalizeText(v.origin).includes(q);
+        const matchesHeading = v.headingText && normalizeText(v.headingText).includes(q);
+        const matchesCode = v.vehicleCode && normalizeText(v.vehicleCode).includes(q);
+
+        // Check if vehicle line stops at searched station (e.g. "cengic vila" -> Tram 2, 3, etc., "jezero" -> Trolley 102, 107)
+        let matchesStop = false;
+        if (q.length >= 2) {
+          const lId = String(v.lineId);
+          if (v.isTram() && TRAM_LINES[lId]) {
+            matchesStop = TRAM_LINES[lId].stops?.some(s => normalizeText(s).includes(q));
+          } else if (v.isTrolley() && TROLLEY_LINES[lId]) {
+            matchesStop = TROLLEY_LINES[lId].stops?.some(s => normalizeText(s).includes(q));
+          } else if (v.isBus() && BUS_LINES[lId]) {
+            const b = BUS_LINES[lId];
+            matchesStop = normalizeText(b.from).includes(q) || normalizeText(b.to).includes(q);
+          }
+        }
+
+        return matchesLine || matchesDest || matchesOrigin || matchesHeading || matchesCode || matchesStop;
+      }
+
+      // 2. Default mode (no search query): filter by active category tab
       if (activeFilter === 'favorites') {
         const isLineFav = favorites.lines.some(l => String(l) === String(v.lineId));
         if (!isLineFav) return false;
@@ -426,15 +454,6 @@ export function useTransitViewModel() {
       } else if (activeFilter === 'tram' && !v.isTram()) return false;
       else if (activeFilter === 'trolley' && !v.isTrolley()) return false;
       else if (activeFilter === 'bus' && !v.isBus()) return false;
-
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matchesLine = v.lineId && v.lineId.toString().toLowerCase().includes(q);
-        const matchesDest = v.destination && v.destination.toLowerCase().includes(q);
-        const matchesOrigin = v.origin && v.origin.toLowerCase().includes(q);
-        const matchesCode = v.vehicleCode && v.vehicleCode.toLowerCase().includes(q);
-        return matchesLine || matchesDest || matchesOrigin || matchesCode;
-      }
 
       return true;
     }).sort((a, b) => {
@@ -448,6 +467,10 @@ export function useTransitViewModel() {
     });
   }, [vehicles, activeFilter, searchQuery, favorites.lines]);
 
+  const matchingStations = useMemo(() => {
+    return searchStations(searchQuery);
+  }, [searchQuery]);
+
   const approachingCount = useMemo(() => {
     return vehicles.filter(v => v.isApproaching()).length;
   }, [vehicles]);
@@ -455,6 +478,7 @@ export function useTransitViewModel() {
   return {
     vehicles,
     filteredVehicles,
+    matchingStations,
     approachingCount,
     userLocation,
     selectedVehicle,
@@ -467,6 +491,10 @@ export function useTransitViewModel() {
     isSheetExpanded,
     isLocationModalOpen,
     mapCenterTrigger,
+    isFloatingMode,
+    setIsFloatingMode,
+    isServerStale: transitService.isServerStale,
+    staleMessage: transitService.staleMessage,
     // Favorites & Modes
     favorites,
     toggleFavoriteLine,

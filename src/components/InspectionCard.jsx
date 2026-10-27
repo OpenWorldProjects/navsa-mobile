@@ -93,7 +93,7 @@ export default function InspectionCard({
               </span>
             </div>
             <div style={{ fontWeight: 800, fontSize: '13px' }}>
-              {proximity.isComing && proximity.etaMinutes ? `~${proximity.etaMinutes} min • ` : ''}
+              {proximity.isComing && proximity.etaMinutes ? `${proximity.etaMinutes} min • ` : ''}
               {proximity.distanceMeters > 1000
                 ? `${(proximity.distanceMeters / 1000).toFixed(1)} km`
                 : `${proximity.distanceMeters}m`}

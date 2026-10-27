@@ -7,7 +7,8 @@ export default function Header({
   isRefreshing,
   onRefresh,
   theme,
-  onToggleTheme,
+  themeMode,
+  onThemeModeChange,
   userLocationName,
   onOpenStationPicker,
   refreshProgress,
@@ -23,14 +24,6 @@ export default function Header({
   return (
     <>
       <header className="app-header">
-        {/* Sleek integrated countdown hairline loader */}
-        <div className="refresh-progress-bar">
-          <div
-            className="refresh-progress-fill"
-            style={{ width: `${refreshProgress}%` }}
-          />
-        </div>
-
         <div className="header-left">
           <div className="app-logo-badge">
             <Navigation size={20} />
@@ -101,15 +94,23 @@ export default function Header({
             <RefreshCw size={17} />
           </button>
 
-          {/* Dark / Light Mode Toggle */}
-          <button
-            className="icon-btn"
-            onClick={onToggleTheme}
-            title={t('settings.toggleTheme')}
-            aria-label={t('settings.toggleTheme')}
-          >
-            {theme === 'dark' ? <Sun size={18} color="#facc15" /> : <Moon size={18} color="#6366f1" />}
-          </button>
+          {[
+            { mode: 'auto', label: t('settings.themeAuto'), icon: <span className="theme-auto-icon">A</span> },
+            { mode: 'light', label: t('settings.themeLight'), icon: <Sun size={17} /> },
+            { mode: 'dark', label: t('settings.themeDark'), icon: <Moon size={17} /> }
+          ].map(({ mode, label, icon }) => (
+            <button
+              key={mode}
+              type="button"
+              className={`icon-btn theme-mode-btn ${themeMode === mode ? 'active' : ''}`}
+              title={label}
+              aria-label={label}
+              aria-pressed={themeMode === mode}
+              onClick={() => onThemeModeChange(mode)}
+            >
+              {icon}
+            </button>
+          ))}
         </div>
       </header>
     </>

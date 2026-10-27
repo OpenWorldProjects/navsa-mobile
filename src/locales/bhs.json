@@ -51,6 +51,8 @@
     "nearbyTransit": "Prevoz u blizini",
     "available": "{{count}} dostupno",
     "incomingCount": "{{count}} dolazi",
+    "arrivingNow": "Stiže",
+    "stations": "Stanice",
     "searchPlaceholder": "Pretraži liniju ili stanicu (npr. 3, 107, Jezero...)",
     "noVehicles": "Nema vozila za odabrane filtere.",
     "noFavorites": "Nema sačuvanih favorita",
@@ -102,8 +104,10 @@
     "ready": "U redu"
   },
   "settings": {
-    "themeLight": "Svijetla tema",
-    "themeDark": "Tamna tema",
+    "theme": "Tema",
+    "themeAuto": "Auto",
+    "themeLight": "Svijetla",
+    "themeDark": "Tamna",
     "toggleTheme": "Promijeni temu",
     "refresh": "Osvježi podatke",
     "language": "Jezik",

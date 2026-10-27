@@ -8,7 +8,7 @@ import FloatingHud from './components/FloatingHud';
 import HomeScreenWidgetModal from './components/HomeScreenWidgetModal';
 import { useTransitViewModel } from './viewmodels/useTransitViewModel';
 import { I18nProvider, useI18n } from './context/I18nContext';
-import { API_CONFIG } from './config/api.config';
+import { useTheme } from './viewmodels/useTheme';
 import { Locate, Layers, MapPin, Eye } from 'lucide-react';
 import { syncWidgetData } from './services/widgetBridge';
 
@@ -16,44 +16,11 @@ function TransitApp() {
   const { t } = useI18n();
   const vm = useTransitViewModel();
 
-  const getSystemTheme = () => {
-    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      return 'light';
-    }
-    return 'dark';
-  };
+  const [isStaleBannerDismissed, setIsStaleBannerDismissed] = useState(false);
 
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem(API_CONFIG.STORAGE_KEYS.THEME);
-    if (saved) return saved;
-    return getSystemTheme();
-  });
+  const { theme, themeMode, setThemeMode } = useTheme();
   const [showLines, setShowLines] = useState(true);
   const [showStops, setShowStops] = useState(true);
-
-  // Auto-switch with system theme (Day/Night schedule on iOS and Android)
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = (e) => {
-      // Auto-adapt if user hasn't explicitly locked a preference
-      const saved = localStorage.getItem(API_CONFIG.STORAGE_KEYS.THEME);
-      if (!saved) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
-    };
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleSystemThemeChange);
-      return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    }
-  }, []);
-
-  // Sync theme
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(API_CONFIG.STORAGE_KEYS.THEME, theme);
-  }, [theme]);
 
   // Global station callbacks for Leaflet popups
   useEffect(() => {
@@ -68,10 +35,6 @@ function TransitApp() {
       delete window.__toggleFavStation;
     };
   }, [vm]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
 
   const closestApproachingVehicle = 
     vm.selectedVehicle || 
@@ -111,13 +74,53 @@ function TransitApp() {
           isRefreshing={vm.isRefreshing}
           onRefresh={vm.loadData}
           theme={theme}
-          onToggleTheme={toggleTheme}
+          themeMode={themeMode}
+          onThemeModeChange={setThemeMode}
           userLocationName={userDisplayName}
           onOpenStationPicker={() => vm.setIsLocationModalOpen(true)}
           refreshProgress={vm.refreshProgress}
           onToggleFloatingMode={() => vm.setIsFloatingMode(true)}
           onOpenWidgetModal={() => vm.setIsWidgetModalOpen(true)}
         />
+      )}
+
+      {/* Upstream KS Ministry Telemetry Warning Banner (matching navsa.spatias.com notice) */}
+      {vm.isServerStale && !isStaleBannerDismissed && (
+        <div
+          className="user-status-pill stale-warning-pill"
+          style={{
+            top: '76px',
+            background: 'rgba(239, 68, 68, 0.95)',
+            color: '#fff',
+            cursor: 'default',
+            border: '1px solid rgba(255,255,255,0.3)',
+            boxShadow: '0 4px 14px rgba(239,68,68,0.4)',
+            zIndex: 1000,
+            maxWidth: '92vw',
+            fontSize: '12px',
+            lineHeight: '1.4',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+        >
+          <span>⚠️ {vm.staleMessage || 'Pozicije sa sistema Ministarstva saobraćaja KS se trenutno ne osvježavaju'}</span>
+          <button
+            onClick={() => setIsStaleBannerDismissed(true)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#fff',
+              fontSize: '13px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              padding: '0 4px'
+            }}
+            aria-label="Sakrij obavijest"
+          >
+            ✕
+          </button>
+        </div>
       )}
 
       {/* Bandwidth & Inactivity Guard Notice */}
@@ -228,6 +231,7 @@ function TransitApp() {
           onSetPreferredVehicle={vm.setPreferredVehicle}
           searchQuery={vm.searchQuery}
           onSearchChange={vm.setSearchQuery}
+          matchingStations={vm.matchingStations}
           approachingCount={vm.approachingCount}
           favorites={vm.favorites}
           toggleFavoriteLine={vm.toggleFavoriteLine}

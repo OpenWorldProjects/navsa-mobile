@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="14dp">
 
-    <!-- Top Row: App Title, Live Indicator, and Refresh Button -->
+    <!-- Top Row: Live Glowing Badge, Subtitle, and Refresh Button -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -20,29 +20,42 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:src="@drawable/ic_widget_live_dot"
-                android:contentDescription="Live" />
-
-            <TextView
+            <!-- Pill with Glowing Dot + UŽIVO -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="UŽIVO"
-                android:textColor="#22c55e"
-                android:textSize="10.5sp"
-                android:textStyle="bold" />
+                android:background="@drawable/widget_live_badge"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="7dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp">
+
+                <ImageView
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:src="@drawable/ic_widget_live_dot"
+                    android:contentDescription="Live indicator" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="UŽIVO"
+                    android:textColor="#22c55e"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="SARAJEVO TRANSIT"
-                android:textColor="#64748b"
+                android:text="NAVSA • SARAJEVO"
+                android:textColor="#94a3b8"
                 android:textSize="10.5sp"
-                android:letterSpacing="0.05"
+                android:letterSpacing="0.06"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -56,18 +69,17 @@
             android:padding="6dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_widget_refresh"
-            android:contentDescription="Refresh" />
+            android:contentDescription="Osvježi podatke" />
     </RelativeLayout>
 
-    <!-- Center Section: Line Badge + Destination -->
+    <!-- Center Section: Line Badge, Operator, and Destination -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp">
+        android:layout_marginTop="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,13 +92,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/widget_line_pill_yellow"
-                android:paddingStart="7dp"
+                android:paddingStart="8dp"
                 android:paddingTop="2dp"
-                android:paddingEnd="7dp"
+                android:paddingEnd="8dp"
                 android:paddingBottom="2dp"
                 android:text="Linija 3"
                 android:textColor="#000000"
-                android:textSize="12.5sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -95,8 +107,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="GRAS #557"
-                android:textColor="#94a3b8"
-                android:textSize="11.5sp" />
+                android:textColor="#cbd5e1"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <TextView
@@ -107,10 +119,33 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Ilidža ➔ Baščaršija"
-            android:textColor="#f8fafc"
-            android:textSize="15.5sp"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_station"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="📍 Prema stanici Marijin Dvor"
+            android:textColor="#94a3b8"
+            android:textSize="11.5sp" />
     </LinearLayout>
+
+    <!-- Visual Arrival Progress Bar -->
+    <ProgressBar
+        android:id="@+id/widget_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="5dp"
+        android:max="100"
+        android:progress="70"
+        android:progressDrawable="@drawable/widget_progress_bar" />
 
     <!-- Bottom Row: ETA status & updated time -->
     <RelativeLayout
@@ -125,7 +160,7 @@
             android:layout_centerVertical="true"
             android:text="🟢 Stiže za ~2 min (450m)"
             android:textColor="#4ade80"
-            android:textSize="11.5sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -134,7 +169,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="19:35"
+            android:text="18:50"
             android:textColor="#64748b"
             android:textSize="10.5sp" />
     </RelativeLayout>

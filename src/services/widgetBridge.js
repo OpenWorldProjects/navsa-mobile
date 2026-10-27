@@ -29,13 +29,19 @@ export async function syncWidgetData(vehicle, userLocation) {
       ? `🟢 Dolazi ${userLocation?.name ? `prema ${userLocation.name}` : 'prema vama'}`
       : `Odlazi ${dist ? `• ${dist}` : ''}`;
 
+    const distMeters = vehicle.proximity?.distanceMeters || 600;
+    const progress = Math.max(15, Math.min(95, Math.round(100 - (distMeters / 1800) * 80)));
+    const stationName = userLocation?.name ? `📍 Prema stanici ${userLocation.name}` : '📍 Prema vašoj stanici';
+
     await TransitWidget.updateWidgetData({
       lineId: String(vehicle.lineId || '3'),
       lineType: lineType,
       destination: vehicle.destination || vehicle.headingText || 'Sarajevo',
       operator: `${vehicle.operator || 'GRAS'} #${vehicle.vehicleCode || '557'}`,
       etaText: etaText,
-      statusText: statusText
+      statusText: statusText,
+      stationName: stationName,
+      progress: progress
     });
   } catch (e) {
     console.debug('Widget sync notice:', e);
