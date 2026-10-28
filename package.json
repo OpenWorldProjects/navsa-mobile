@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "proxy": "node server/navsa-proxy.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",

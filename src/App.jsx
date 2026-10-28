@@ -127,8 +127,11 @@ function TransitApp() {
         </div>
       )}
 
-      {!vm.isFloatingMode && !vm.isServerStale && ['bus', 'all'].includes(vm.activeFilter) && (
-        <div className="feed-notice" role="status">{t('feed.busesUnavailable')}</div>
+      {!vm.isFloatingMode && !vm.isServerStale && (vm.sourceStatus.notice || vm.sourceStatus.isStale) && (
+        <div className="feed-notice" role="status">
+          {vm.sourceStatus.notice && <span>{vm.sourceStatus.notice}</span>}
+          {vm.sourceStatus.isStale && <span> {t('feed.statusUnverified')}</span>}
+        </div>
       )}
 
       {/* Bandwidth & Inactivity Guard Notice */}

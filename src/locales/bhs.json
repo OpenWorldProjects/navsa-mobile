@@ -2,7 +2,7 @@
   "feed": {
     "unavailable": "Nedostupno",
     "lastKnown": "Posljednja pozicija",
-    "busesUnavailable": "Pozicije autobusa trenutno nisu dostupne. NAVSA ih skriva jer sistem Ministarstva saobraćaja KS dostavlja zastarjele podatke."
+    "statusUnverified": "Status dostupnosti izvora trenutno nije moguće provjeriti."
   },
   "app": {
     "name": "Sarajevo Transit",

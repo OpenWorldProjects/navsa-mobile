@@ -1,5 +1,4 @@
 import { apiClient } from './apiClient';
-import { API_CONFIG } from '../../config/api.config';
 import { Vehicle } from '../../models/Vehicle';
 import { decodeLineAndDirection, calculateBearing, calculateDistanceMeters, determineUserRelativeDirection } from '../lines';
 
@@ -9,6 +8,7 @@ export class TransitService {
     this.isServerStale = true;
     this.staleMessage = '';
     this.lastSuccessfulSync = null;
+    this.sourceStatus = { availability: {}, notice: '', isStale: true };
   }
 
   isCoordinateValid(lat, lng) {
@@ -19,7 +19,11 @@ export class TransitService {
   async fetchLiveVehicles(userLocation = null) {
     let rawVehicles;
     try {
-      rawVehicles = await apiClient.getLiveVehicles();
+      const [vehicles, status] = await Promise.all([
+        apiClient.getLiveVehicles(), apiClient.getFeedStatus()
+      ]);
+      rawVehicles = vehicles;
+      this.sourceStatus = status;
       if (!Array.isArray(rawVehicles)) throw new Error('Live feed unavailable');
     } catch {
       this.isServerStale = true;
@@ -45,9 +49,9 @@ export class TransitService {
       if (!raw || !Number.isFinite(raw.id) || raw.id === 0
         || ![2, 3, 4].includes(raw.vehicle_type_id)
         || !this.isCoordinateValid(raw.latitude, raw.longitude)) continue;
-      // NAVSA currently disables buses because the ministry feed is stale.
-      // Negative IDs are valid provider IDs, not a reason to reject a vehicle.
-      if (API_CONFIG.UNAVAILABLE_VEHICLE_TYPES.includes(raw.vehicle_type_id)) continue;
+      // Follow the current upstream flag, not a permanently disabled vehicle type.
+      const kind = { 2: 'bus', 3: 'trolley', 4: 'tram' }[raw.vehicle_type_id];
+      if (this.sourceStatus.availability[kind] === false) continue;
       const decoded = decodeLineAndDirection(raw);
       const previous = this.previousPositionsMap.get(raw.id);
       let latitude = raw.latitude;

@@ -34,6 +34,9 @@ jobs:
         run: npm ci
 
       - name: Build web application
+        env:
+          VITE_NAVSA_LIVE_URL: ${{ vars.VITE_NAVSA_LIVE_URL }}
+          VITE_NAVSA_STATUS_URL: ${{ vars.VITE_NAVSA_STATUS_URL }}
         run: npm run build
 
       - name: Setup Pages

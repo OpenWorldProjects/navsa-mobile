@@ -499,6 +499,7 @@ export function useTransitViewModel() {
     setIsFloatingMode,
     isServerStale: transitService.isServerStale,
     staleMessage: transitService.staleMessage,
+    sourceStatus: transitService.sourceStatus,
     // Favorites & Modes
     favorites,
     toggleFavoriteLine,
