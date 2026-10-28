@@ -1,4 +1,9 @@
 {
+  "feed": {
+    "unavailable": "Unavailable",
+    "lastKnown": "Last known position",
+    "busesUnavailable": "Bus positions are currently unavailable. NAVSA hides them because the KS Ministry of Transport feed is stale."
+  },
   "app": {
     "name": "Sarajevo Transit",
     "tagline": "Real-time Public Transport Tracking",

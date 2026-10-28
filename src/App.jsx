@@ -17,6 +17,9 @@ function TransitApp() {
   const vm = useTransitViewModel();
 
   const [isStaleBannerDismissed, setIsStaleBannerDismissed] = useState(false);
+  useEffect(() => {
+    if (!vm.isServerStale) setIsStaleBannerDismissed(false);
+  }, [vm.isServerStale]);
 
   const { theme, themeMode, setThemeMode } = useTheme();
   const [showLines, setShowLines] = useState(true);
@@ -71,6 +74,7 @@ function TransitApp() {
       {!vm.isFloatingMode && (
         <Header
           totalVehicles={vm.vehicles.length}
+          isServerStale={vm.isServerStale}
           isRefreshing={vm.isRefreshing}
           onRefresh={vm.loadData}
           theme={theme}
@@ -121,6 +125,10 @@ function TransitApp() {
             ✕
           </button>
         </div>
+      )}
+
+      {!vm.isFloatingMode && !vm.isServerStale && ['bus', 'all'].includes(vm.activeFilter) && (
+        <div className="feed-notice" role="status">{t('feed.busesUnavailable')}</div>
       )}
 
       {/* Bandwidth & Inactivity Guard Notice */}

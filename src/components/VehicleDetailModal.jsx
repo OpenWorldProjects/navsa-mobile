@@ -71,7 +71,7 @@ export default function VehicleDetailModal({
         </div>
 
         {/* Ingoing vs Outgoing badge & distance */}
-        {vehicle.proximity && (
+        {vehicle.proximity && vehicle.proximity.isComing !== null && !vehicle.isStale && (
           <div
             style={{
               padding: '12px 14px',
@@ -177,7 +177,7 @@ export default function VehicleDetailModal({
             <Compass size={16} color="#fb923c" />
             <div>
               <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{t('directions.compassBearing')}</div>
-              <div style={{ fontSize: '12px', fontWeight: 700 }}>{Math.round(vehicle.bearing || 0)}°</div>
+              <div style={{ fontSize: '12px', fontWeight: 700 }}>{Number.isFinite(vehicle.bearing) ? `${Math.round(vehicle.bearing)}°` : '—'}</div>
             </div>
           </div>
 

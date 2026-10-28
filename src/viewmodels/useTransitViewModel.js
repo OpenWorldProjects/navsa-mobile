@@ -115,12 +115,12 @@ export function useTransitViewModel() {
   const [isFloatingMode, setIsFloatingMode] = useState(false);
   const [isWidgetModalOpen, setIsWidgetModalOpen] = useState(false);
 
-  // Preferred vehicle filter (Default: 'tram' as requested by user)
+  // Start with all available vehicles; preserve an explicitly saved preference.
   const [preferredVehicle, setPreferredVehicleState] = useState(() => {
-    return localStorage.getItem(API_CONFIG.STORAGE_KEYS.PREFERRED_VEHICLE) || 'tram';
+    return localStorage.getItem(API_CONFIG.STORAGE_KEYS.PREFERRED_VEHICLE) || 'all';
   });
   const [activeFilter, setActiveFilter] = useState(() => {
-    return localStorage.getItem(API_CONFIG.STORAGE_KEYS.PREFERRED_VEHICLE) || 'tram';
+    return localStorage.getItem(API_CONFIG.STORAGE_KEYS.PREFERRED_VEHICLE) || 'all';
   });
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -290,10 +290,13 @@ export function useTransitViewModel() {
     }
   }, []);
 
+  const requestInFlightRef = useRef(false);
+
   // Fetch live vehicle telemetry
   const loadData = useCallback(async () => {
-    if (document.visibilityState === 'hidden') return;
+    if (document.visibilityState === 'hidden' || requestInFlightRef.current) return;
     if (!checkAndUpdateDailyQuota()) return;
+    requestInFlightRef.current = true;
 
     setIsRefreshing(true);
     try {
@@ -302,12 +305,12 @@ export function useTransitViewModel() {
 
       setSelectedVehicle(curr => {
         if (!curr) return null;
-        return data.find(v => v.id === curr.id) || curr;
+        return data.find(v => v.id === curr.id) || null;
       });
 
       setDetailModalVehicle(curr => {
         if (!curr) return null;
-        return data.find(v => v.id === curr.id) || curr;
+        return data.find(v => v.id === curr.id) || null;
       });
 
       // If user is actively following a vehicle on the map, glide camera to its new telemetry position
@@ -320,6 +323,7 @@ export function useTransitViewModel() {
     } catch (err) {
       console.error('Failed to load live transit telemetry:', err);
     } finally {
+      requestInFlightRef.current = false;
       setIsRefreshing(false);
       setRefreshProgress(0);
     }

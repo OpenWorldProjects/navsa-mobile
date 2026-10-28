@@ -297,7 +297,7 @@ export default function VehicleListSheet({
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              {activeCardVehicle.proximity?.isApproaching && (
+              {activeCardVehicle.isApproaching() && (
                 <span className="featured-eta-badge">
                   <span className="live-dot" style={{ width: '6px', height: '6px' }} />
                   {activeCardVehicle.proximity.etaMinutes <= 1 ? 'Stiže' : `${activeCardVehicle.proximity.etaMinutes || 2} min`}
@@ -396,7 +396,7 @@ export default function VehicleListSheet({
             </div>
           ) : (
             <div className="featured-meta-hint">
-              <span>{activeCardVehicle.speedKmH} km/h</span>
+              <span>{activeCardVehicle.isStale ? t('feed.lastKnown') : `${activeCardVehicle.speedKmH} km/h`}</span>
               {activeCardVehicle.proximity?.distanceFormatted && (
                 <span>{activeCardVehicle.proximity.distanceFormatted}</span>
               )}
@@ -514,12 +514,12 @@ export default function VehicleListSheet({
                       </div>
                       <div className="apple-row-meta">
                         <span>{v.operator} #{v.vehicleCode}</span>
-                        <span className="apple-row-speed">{v.speedKmH} km/h</span>
+                        <span className="apple-row-speed">{v.isStale ? t('feed.lastKnown') : `${v.speedKmH} km/h`}</span>
                       </div>
                     </div>
 
                     <div className="apple-row-right">
-                      {v.proximity && (
+                      {v.proximity && v.proximity.isComing !== null && !v.isStale && (
                         <span
                           className={`apple-row-eta ${isComing ? 'ingoing' : 'outgoing'}`}
                         >

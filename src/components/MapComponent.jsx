@@ -64,6 +64,12 @@ export default function MapComponent({
     userLayerGroupRef.current = L.layerGroup().addTo(map);
     vehiclesLayerGroupRef.current = L.layerGroup().addTo(map);
 
+    const updateMarkerScale = () => {
+      const zoom = map.getZoom();
+      mapContainerRef.current?.style.setProperty('--vehicle-scale', String(Math.max(0.65, Math.min(1.05, 0.8 + (zoom - 14) * 0.1))));
+    };
+    map.on('zoomend', updateMarkerScale);
+    updateMarkerScale();
     mapInstanceRef.current = map;
 
     // Invalidate size on any container or orientation change to eliminate black void
@@ -293,7 +299,7 @@ export default function MapComponent({
   // Helper to create DivIcon for vehicle
   const createVehicleIcon = (vehicle, badgeBg, isSelected, isApproaching) => {
     const markerHtml = `
-      <div class="vehicle-marker-stack ${isSelected ? 'selected' : ''}">
+      <div class="vehicle-marker-stack ${isSelected ? 'selected' : ''} ${vehicle.isStale ? 'stale' : ''}" data-vehicle-id="${vehicle.id}">
         <!-- Line number pill -->
         <div class="vehicle-marker-badge" style="background-color: ${badgeBg};">
           ${vehicle.lineId || '?'}
@@ -301,7 +307,10 @@ export default function MapComponent({
         <!-- Direction Arrow rotated to bearing -->
         <div class="vehicle-arrow-box" style="transform: rotate(${vehicle.bearing || 0}deg);">
           <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-            <path d="M16 2 L28 28 L16 21 L4 28 Z" fill="${badgeBg}" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"/>
+            ${Number.isFinite(vehicle.bearing)
+              ? `<path d="M16 2 L28 28 L16 21 L4 28 Z" fill="${badgeBg}" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"/>`
+              : `<circle cx="16" cy="16" r="7" fill="${badgeBg}" stroke="#000000" stroke-width="2.5"/>`}
+
           </svg>
         </div>
         ${isApproaching ? '<div class="approach-pulse-ring"></div>' : ''}
@@ -318,7 +327,7 @@ export default function MapComponent({
 
   // Helper to create popup HTML
   const createPopupContent = (vehicle, badgeBg) => {
-    const proximityBadge = vehicle.proximity ? `
+    const proximityBadge = vehicle.proximity && vehicle.proximity.isComing !== null && !vehicle.isStale ? `
       <div class="popup-status-badge ${vehicle.proximity.badgeClass}">
         ${vehicle.proximity.isComing ? '🟢 ' + t('directions.ingoing') : '🔴 ' + t('directions.outgoing')}
         ${vehicle.proximity.etaMinutes ? ` • ${vehicle.proximity.etaMinutes} min` : ''}
@@ -331,7 +340,7 @@ export default function MapComponent({
           <span class="popup-line-pill" style="background: ${badgeBg};">
             ${t('sheet.line', { id: vehicle.lineId })}
           </span>
-          <span class="popup-operator">${vehicle.operator} • ${vehicle.speedKmH} km/h</span>
+          <span class="popup-operator">${vehicle.operator} • ${vehicle.isStale ? t('feed.lastKnown') : vehicle.speedKmH + ' km/h'}</span>
         </div>
         <div class="popup-route-title">
           ${vehicle.headingText}
@@ -357,7 +366,7 @@ export default function MapComponent({
       const badgeBg = vehicle.getPrimaryColor();
       const isSelected = selectedVehicle && selectedVehicle.id === vehicle.id;
       const isApproaching = vehicle.isApproaching();
-      const stateKey = `${badgeBg}_${vehicle.bearing}_${isSelected}_${isApproaching}_${vehicle.lineId}`;
+      const stateKey = `${badgeBg}_${Number.isFinite(vehicle.bearing)}_${isSelected}_${isApproaching}_${vehicle.lineId}_${vehicle.isStale}`;
 
       const existing = vehicleMarkersMapRef.current.get(vehicle.id);
 
@@ -372,6 +381,8 @@ export default function MapComponent({
           existing.marker.setIcon(createVehicleIcon(vehicle, badgeBg, isSelected, isApproaching));
           existing.stateKey = stateKey;
         }
+        const arrow = existing.marker.getElement()?.querySelector('.vehicle-arrow-box');
+        if (arrow) arrow.style.transform = `rotate(${vehicle.bearing ?? 0}deg)`;
 
         existing.marker.setPopupContent(createPopupContent(vehicle, badgeBg));
       } else {

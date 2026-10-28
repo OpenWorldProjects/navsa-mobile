@@ -65,7 +65,8 @@ export default function FloatingHud({
       >
         <div className="hud-dest">{vehicle.headingText}</div>
         <div className="hud-sub">
-          {vehicle.proximity && (
+          {vehicle.isStale && <span>{t('feed.lastKnown')}</span>}
+          {vehicle.proximity && vehicle.proximity.isComing !== null && !vehicle.isStale && (
             <span className={vehicle.proximity.isComing ? 'hud-ingoing' : 'hud-outgoing'}>
               {vehicle.proximity.isComing ? `🟢 ${t('filters.approaching')}` : `🔴 ${t('sheet.departing')}`}
               {vehicle.proximity.etaMinutes ? ` • ${vehicle.proximity.etaMinutes} min` : ''}

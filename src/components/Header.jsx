@@ -4,6 +4,7 @@ import { useI18n } from '../context/I18nContext';
 
 export default function Header({
   totalVehicles,
+  isServerStale,
   isRefreshing,
   onRefresh,
   theme,
@@ -31,9 +32,9 @@ export default function Header({
           <div className="app-titles">
             <div className="app-title-main">
               <span className="app-brand-name">Sarajevo<span className="brand-suffix"> Transit</span></span>
-              <span className="live-indicator">
+              <span className={`live-indicator ${isServerStale ? 'unavailable' : ''}`} title={isServerStale ? t('feed.unavailable') : t('app.live')}>
                 <span className="live-dot" />
-                <span className="live-text">{t('app.live')}</span>
+                <span className="live-text">{t(isServerStale ? 'feed.unavailable' : 'app.live')}</span>
               </span>
             </div>
             <div className="app-subtitle">

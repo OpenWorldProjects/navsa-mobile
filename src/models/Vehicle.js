@@ -6,7 +6,7 @@ export class Vehicle {
     vehicleTypeId,
     latitude,
     longitude,
-    bearing = 0,
+    bearing = null,
     speedKmH = 0,
     lineId = '?',
     origin = '',
@@ -16,6 +16,7 @@ export class Vehicle {
     operator = 'GRAS',
     proximity = null,
     isStale = false,
+    sampledAt = null,
     lastUpdated = null
   }) {
     this.id = id;
@@ -33,7 +34,8 @@ export class Vehicle {
     this.operator = operator;
     this.proximity = proximity;
     this.isStale = isStale;
-    this.lastUpdated = lastUpdated || Date.now();
+    this.lastUpdated = lastUpdated ?? Date.now();
+    this.sampledAt = sampledAt ?? this.lastUpdated;
   }
 
   isTram() {
@@ -49,7 +51,7 @@ export class Vehicle {
   }
 
   isApproaching() {
-    return !!(this.proximity && this.proximity.isComing);
+    return !this.isStale && !!(this.proximity && this.proximity.isComing);
   }
 
   isDepot() {

@@ -641,13 +641,13 @@ body, html {
   width: 48px;
   height: 54px;
   transform-origin: 24px 40px;
+  transform: scale(var(--vehicle-scale, 1));
   cursor: pointer;
-  transition: transform 0.2s ease;
 }
 
 .vehicle-marker-stack:hover,
 .vehicle-marker-stack.selected {
-  transform: scale(1.18);
+  transform: scale(calc(var(--vehicle-scale, 1) * 1.12));
   z-index: 1000 !important;
 }
 
@@ -680,7 +680,7 @@ body, html {
   align-items: center;
   justify-content: center;
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.5));
-  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Apply telemetry heading directly; 359° -> 1° must not animate a full turn. */
   z-index: 2;
 }
 
@@ -3054,4 +3054,23 @@ body, html {
   align-items: center;
   gap: 8px;
   min-height: 44px;
+}
+
+.vehicle-marker-stack.stale { opacity: 0.5; filter: grayscale(0.65); }
+.live-indicator.unavailable { color: var(--text-muted); background: var(--bg-glass-card); }
+.live-indicator.unavailable .live-dot { background: var(--text-muted); box-shadow: none; animation: none; }
+.feed-notice {
+  position: absolute;
+  top: 138px;
+  left: 12px;
+  z-index: 1000;
+  max-width: min(440px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  background: var(--bg-glass);
+  backdrop-filter: var(--backdrop-acrylic);
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1.5;
 }

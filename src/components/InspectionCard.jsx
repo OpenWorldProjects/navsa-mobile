@@ -16,7 +16,7 @@ export default function InspectionCard({
 
   const badgeBg = vehicle.getPrimaryColor();
   const isDepot = vehicle.isDepot ? vehicle.isDepot() : false;
-  const proximity = vehicle.proximity;
+  const proximity = !vehicle.isStale && vehicle.proximity?.isComing !== null ? vehicle.proximity : null;
 
   let TypeIcon = Bus;
   if (vehicle.isTram()) TypeIcon = Train;

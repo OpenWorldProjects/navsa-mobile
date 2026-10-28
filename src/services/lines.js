@@ -14,7 +14,8 @@ export const TRAM_LINES = {
   "4": { line: "4", type: 4, name: "Linija 4", from: "Ilidža", to: "Željeznička Stanica", stops: ["Ilidža", "Stup", "Nedžarići", "Alipašino Polje", "Otoka", "Čengić Vila", "Socijalno", "Pofalići", "Muzeji", "Željeznička Stanica"] },
   "5": { line: "5", type: 4, name: "Linija 5", from: "Nedžarići", to: "Baščaršija", stops: ["Nedžarići", "Alipašino Polje", "Otoka", "Čengić Vila", "Socijalno", "Pofalići", "Marijin Dvor", "Skenderija", "Baščaršija"] },
   "6": { line: "6", type: 4, name: "Linija 6", from: "Ilidža", to: "Skenderija", stops: ["Ilidža", "Stup", "Nedžarići", "Otoka", "Čengić Vila", "Pofalići", "Marijin Dvor", "Skenderija"] },
-  "7": { line: "7", type: 4, name: "Linija 7", from: "Nedžarići", to: "Skenderija", stops: ["Nedžarići", "Otoka", "Čengić Vila", "Marijin Dvor", "Skenderija"] }
+  "7": { line: "7", type: 4, name: "Linija 7", from: "Nedžarići", to: "Skenderija", stops: ["Nedžarići", "Otoka", "Čengić Vila", "Marijin Dvor", "Skenderija"] },
+  "11": { line: "11", type: 4, name: "Linija 11", from: "Hrasnica", to: "Baščaršija", stops: ["Hrasnica", "Ilidža", "Stup", "Nedžarići", "Otoka", "Čengić Vila", "Marijin Dvor", "Skenderija", "Baščaršija"] }
 };
 
 export const TROLLEY_LINES = {
@@ -63,7 +64,8 @@ export const BUS_LINES = {
 const tramLineSets = {
   "1": new Set(["BAŠČARŠIJA", "ŽELJEZNIČKA STANICA"]),
   "2": new Set(["BAŠČARŠIJA", "ČENGIĆ VILA"]),
-  "3": new Set(["BAŠČARŠIJA", "ILIDŽA", "HRASNICA"]),
+  "3": new Set(["BAŠČARŠIJA", "ILIDŽA"]),
+  "11": new Set(["BAŠČARŠIJA", "HRASNICA"]),
   "4": new Set(["ŽELJEZNIČKA STANICA", "ILIDŽA"]),
   "5": new Set(["BAŠČARŠIJA", "NEDŽARIĆI"]),
   "6": new Set(["SKENDERIJA", "ILIDŽA"]),
@@ -153,15 +155,8 @@ export function decodeLineAndDirection(vehicle) {
   });
 
   if (!foundLineId) {
-    if (fromUpper.includes('HRASNICA') || toUpper.includes('HRASNICA')) {
-      foundLineId = '7'; // Nova tramvajska linija Ilidža - Hrasnica
-    } else if (fromUpper.includes('REMIZ') || toUpper.includes('REMIZ') || fromUpper.includes('GARA') || toUpper.includes('GARA')) {
-      foundLineId = 'REMIZA';
-    } else if (rawLineUpper === 'TRAM' || (!toUpper && vehicle.vehicle_type_id === 4)) {
-      foundLineId = '3'; // Glavna tramvajska linija Ilidža - Baščaršija
-    } else {
-      foundLineId = vehicle.vehicle_type_id === 4 ? '3' : (vehicle.vehicle_type_id === 3 ? '107' : 'BUS');
-    }
+    foundLineId = fromUpper.includes('REMIZ') || toUpper.includes('REMIZ')
+      || fromUpper.includes('GARA') || toUpper.includes('GARA') ? 'REMIZA' : '?';
   }
 
   // Check if heading to or from depot (Remiza)
@@ -242,7 +237,7 @@ export function calculateBearing(lat1, lon1, lat2, lon2) {
 
 // Relative direction determination: Is vehicle coming towards the user or moving away?
 export function determineUserRelativeDirection(vehicle, userLocation, prevVehicle) {
-  if (!userLocation) {
+  if (!userLocation || vehicle.isStale) {
     return {
       status: 'unknown',
       label: 'Lokacija nepoznata',
@@ -311,14 +306,14 @@ export function determineUserRelativeDirection(vehicle, userLocation, prevVehicl
   }
 
   // 3. Fallback to vector angle between vehicle bearing and direction to user
-  if (isComing === null && vehicle.bearing !== undefined) {
+  if (isComing === null && Number.isFinite(vehicle.bearing)) {
     const bearingToUser = calculateBearing(
       vehicle.latitude,
       vehicle.longitude,
       userLocation.latitude,
       userLocation.longitude
     );
-    const diff = Math.abs(((vehicle.bearing - bearingToUser + 180) % 360) - 180);
+    const diff = Math.abs(((vehicle.bearing - bearingToUser + 540) % 360) - 180);
     isComing = diff < 80;
   }
 
@@ -335,6 +330,13 @@ export function determineUserRelativeDirection(vehicle, userLocation, prevVehicl
       isComing: true,
       distanceMeters,
       etaMinutes: 1
+    };
+  }
+
+  if (isComing === null) {
+    return {
+      status: 'unknown', label: 'Smjer još nije poznat', badgeClass: 'badge-neutral',
+      isComing: null, distanceMeters, etaMinutes: null
     };
   }
 
